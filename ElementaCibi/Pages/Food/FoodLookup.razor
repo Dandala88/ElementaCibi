@@ -1,0 +1,78 @@
+﻿@page "/food/lookup"
+@using ElementaCibi.Data.FdcModels.Search;
+@using ElementaCibi.Data.Models;
+@inject Data.Services.FoodDataCentralService FoodDataCentralService;
+
+<h3>Food Lookup</h3>
+
+<EditForm Model="@foodSearch" OnValidSubmit="Search">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+    <InputText @bind-Value="foodSearch.Term"></InputText>
+    <button type="submit" class="btn btn-primary">Search</button>
+</EditForm>
+
+@if(foodSearchResult.Count > 0)
+{
+    <table class="table">
+        <thead class="table-light">
+            <tr>
+                <th>FDCId</th>
+                <th>Description</th>
+                <th>Data Type</th>
+                <th>Brand</th>
+                <th>Calories</th>
+                <th>Fiber</th>
+            </tr>
+        </thead>
+        @foreach(Food food in foodSearchResult)
+        {
+            <tr>
+                <td>@food.FdcId</td>
+                <td>@food.Description</td>
+                <td>@food.DataType</td>
+                <td>@food.Brand</td>
+                <td>
+                    @if (food.Calories != null)
+                    {
+                        @food.Calories.Amount@:&nbsp;@food.Calories.Unit
+                    }
+                </td>
+                <td>
+                    @if (food.Fiber != null)
+                    {
+                        @food.Fiber.Amount@:&nbsp;@food.Fiber.Unit
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+
+    <style>
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: dodgerblue;
+        }
+    </style>
+}
+
+@code {
+    private FoodSearch foodSearch = new FoodSearch();
+    private List<Food> foodSearchResult = new List<Food>();
+
+    private async Task Search()
+    {
+        var result = await FoodDataCentralService.GetFoodBySearchTerm(foodSearch);
+        if(result?.Foods != null)
+        {
+            foreach(SearchResultFood searchResultFood in result.Foods)
+            {
+                var f = new Food();
+                f.FdcSearchToFood(searchResultFood);
+                foodSearchResult.Add(f);
+            }
+        }
+    }
+}
