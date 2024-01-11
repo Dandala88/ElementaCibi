@@ -1,4 +1,5 @@
-﻿using ElementaCibi.Data.FdcModels.Search;
+﻿using ElementaCibi.Data.FdcModels;
+using ElementaCibi.Data.FdcModels.Search;
 
 namespace ElementaCibi.Data.Models
 {
@@ -11,16 +12,16 @@ namespace ElementaCibi.Data.Models
         public Nutrient? Calories { get; set; }
         public Nutrient? Fiber { get; set; }
 
-        public void FdcSearchToFood(SearchResultFood searchResultFood)
+        public void FdcSearchToFood(SearchResultFood fdcSearchResult)
         {
-            FdcId = searchResultFood.FdcId;
-            Description = searchResultFood.Description ?? string.Empty;
-            DataType = searchResultFood.DataType ?? string.Empty;
-            Brand = searchResultFood.BrandOwner ?? string.Empty;
+            FdcId = fdcSearchResult.FdcId;
+            Description = fdcSearchResult.Description ?? string.Empty;
+            DataType = fdcSearchResult.DataType ?? string.Empty;
+            Brand = fdcSearchResult.BrandOwner ?? string.Empty;
 
-            if (searchResultFood?.FoodNutrients != null)
+            if (fdcSearchResult?.FoodNutrients != null)
             {
-                var calories = searchResultFood.FoodNutrients.Where(n => n.NutrientId == 1008)?.FirstOrDefault();
+                var calories = fdcSearchResult.FoodNutrients.Where(n => n.NutrientId == NutrientCode.Calorie.Id)?.FirstOrDefault();
 
                 if (calories?.Value != null)
                 {
@@ -31,7 +32,7 @@ namespace ElementaCibi.Data.Models
                     };
                 }
 
-                var fiber = searchResultFood.FoodNutrients.Where(n => n.NutrientId == 1079)?.FirstOrDefault();
+                var fiber = fdcSearchResult.FoodNutrients.Where(n => n.NutrientId == NutrientCode.Fiber.Id)?.FirstOrDefault();
 
                 if (fiber?.Value != null)
                 {
@@ -39,6 +40,48 @@ namespace ElementaCibi.Data.Models
                     {
                         Amount = fiber.Value ?? 0.0,
                         Unit = fiber.UnitName ?? string.Empty,
+                    };
+                }
+            }
+        }
+
+        public void FdcFoodToFood(FdcFoodResult fdcFoodResult)
+        {
+            if(fdcFoodResult.GetType() == typeof(FdcWholeFoodResult))
+            {
+                fdcFoodResult = (FdcWholeFoodResult)fdcFoodResult;
+            }
+            else
+            {
+                var fdcBrandedFoodResult = (FdcBrandedFoodResult)fdcFoodResult;
+                Brand = fdcBrandedFoodResult.BrandOwner ?? string.Empty;
+            }
+
+            FdcId = fdcFoodResult.FdcId;
+            Description = fdcFoodResult.Description ?? string.Empty;
+            DataType = fdcFoodResult.DataType ?? string.Empty;
+
+            if (fdcFoodResult?.FoodNutrients != null)
+            {
+                var calories = fdcFoodResult.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Calorie.Id)?.FirstOrDefault();
+
+                if (calories?.Amount != null)
+                {
+                    Calories = new Nutrient
+                    {
+                        Amount = calories.Amount ?? 0.0,
+                        Unit = calories.Nutrient?.UnitName ?? string.Empty,
+                    };
+                }
+
+                var fiber = fdcFoodResult.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Fiber.Id)?.FirstOrDefault();
+
+                if (fiber?.Amount != null)
+                {
+                    Fiber = new Nutrient
+                    {
+                        Amount = fiber.Amount ?? 0.0,
+                        Unit = fiber.Nutrient?.UnitName ?? string.Empty,
                     };
                 }
             }

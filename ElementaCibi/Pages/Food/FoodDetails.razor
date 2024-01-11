@@ -1,0 +1,83 @@
+﻿@page "/food/details/{datatype}/{id}"
+@using ElementaCibi.Data.FdcModels.Search;
+@using ElementaCibi.Data.Models;
+@inject Data.Services.FoodDataCentralService FoodDataCentralService;
+
+<h3>Food Details</h3>
+
+@if(Food != null)
+{
+    <table class="table">
+        <tr>
+            <th>FDCId</th>
+            <td>@Food.FdcId</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>@Food.Description</td>
+        </tr>
+        <tr>
+            <th>Data Type</th>
+            <td>@Food.DataType</td>
+        </tr>
+        <tr>
+            <th>Brand</th>
+            <td>@Food.Brand</td>
+        </tr>
+        <tr>
+            <th>Calories</th>
+            <td>
+                @if (Food.Calories != null)
+                {
+                    @Food.Calories.Amount@:&nbsp;@Food.Calories.Unit
+                }
+            </td>
+        </tr>
+        <tr>
+            <th>Fiber</th>
+            <td>
+                @if (Food.Fiber != null)
+                {
+                    @Food.Fiber.Amount@:&nbsp;@Food.Fiber.Unit
+                }
+            </td>
+        </tr>
+    </table>
+
+    <style>
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: dodgerblue;
+        }
+    </style>
+}
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+    [Parameter]
+    public string DataType { get; set; } = string.Empty;
+    private Food Food = new Food();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != null)
+        {
+            if (DataType == "Branded")
+            {
+                var result = await FoodDataCentralService.GetBrandedFoodById(Id);
+                if (result != null)
+                    Food.FdcFoodToFood(result);
+            }
+            else
+            {
+                var result = await FoodDataCentralService.GetWholeFoodById(Id);
+                if (result != null)
+                    Food.FdcFoodToFood(result);
+            }
+        }
+
+    }
+}

@@ -2,7 +2,7 @@
 
 namespace ElementaCibi.Data.FdcModels.Search
 {
-    public class SearchResult
+    public class FdcSearchResult
     {
         [JsonPropertyName("totalHits")]
         public int? TotalHits { get; set; }

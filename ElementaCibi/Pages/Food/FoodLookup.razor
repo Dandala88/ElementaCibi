@@ -2,6 +2,7 @@
 @using ElementaCibi.Data.FdcModels.Search;
 @using ElementaCibi.Data.Models;
 @inject Data.Services.FoodDataCentralService FoodDataCentralService;
+@inject NavigationManager NavigationManager;
 
 <h3>Food Lookup</h3>
 
@@ -27,7 +28,7 @@
         </thead>
         @foreach(Food food in foodSearchResult)
         {
-            <tr>
+            <tr @onclick="() => OpenDetails(food.FdcId, food.DataType)">
                 <td>@food.FdcId</td>
                 <td>@food.Description</td>
                 <td>@food.DataType</td>
@@ -74,5 +75,11 @@
                 foodSearchResult.Add(f);
             }
         }
+    }
+
+    private void OpenDetails(int? id, string? dataType)
+    {
+        if(id != null && dataType != null)
+            NavigationManager.NavigateTo($"/food/details/{dataType}/{id}");
     }
 }
