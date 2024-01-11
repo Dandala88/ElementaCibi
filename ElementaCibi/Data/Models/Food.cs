@@ -11,6 +11,26 @@ namespace ElementaCibi.Data.Models
         public string Brand { get; set; } = string.Empty;
         public Nutrient? Calories { get; set; }
         public Nutrient? Fiber { get; set; }
+        public double Ratio 
+        { 
+            get
+            {
+                if(Fiber?.Amount != null && Calories?.Amount != null)
+                    return Fiber.Amount / Calories.Amount;
+                else
+                    return 0.0;
+            }
+        }
+        public double Hundred 
+        {
+            get 
+            {
+                if (Fiber?.Amount != null && Calories?.Amount != null)
+                    return 100 / (Fiber.Amount / Calories.Amount);
+                else
+                    return double.PositiveInfinity;
+            }
+        }
 
         public void FdcSearchToFood(SearchResultFood fdcSearchResult)
         {

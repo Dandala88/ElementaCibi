@@ -24,6 +24,8 @@
                 <th>Brand</th>
                 <th>Calories</th>
                 <th>Fiber</th>
+                <th>Ratio</th>
+                <th>💯</th>
             </tr>
         </thead>
         @foreach(Food food in foodSearchResult)
@@ -45,6 +47,8 @@
                         @food.Fiber.Amount@:&nbsp;@food.Fiber.Unit
                     }
                 </td>
+                <td>@food.Ratio</td>
+                <td>@food.Hundred</td>
             </tr>
         }
     </table>
