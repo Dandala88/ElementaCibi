@@ -1,4 +1,5 @@
 ﻿@page "/food/lookup"
+@page "/food/lookup/{foodterm}"
 @using ElementaCibi.Data.FdcModels.Search;
 @using ElementaCibi.Data.Models;
 @inject Data.Services.FoodDataCentralService FoodDataCentralService;
@@ -64,11 +65,27 @@
 }
 
 @code {
+    [Parameter]
+    public string? FoodTerm { get; set; }
     private FoodSearch foodSearch = new FoodSearch();
     private List<Food> foodSearchResult = new List<Food>();
 
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(FoodTerm))
+        {
+            foodSearch.Term = FoodTerm;
+            await Search();
+        }
+    }
+
     private async Task Search()
     {
+        if (FoodTerm != foodSearch.Term)
+        {
+            FoodTerm = foodSearch.Term;
+            NavigationManager.NavigateTo($"/food/lookup/{FoodTerm}");
+        }
         foodSearchResult.Clear();
         var result = await FoodDataCentralService.GetFoodBySearchTerm(foodSearch);
         if(result?.Foods != null)

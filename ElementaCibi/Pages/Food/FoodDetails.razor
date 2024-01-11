@@ -1,5 +1,6 @@
 ﻿@page "/food/details/{datatype}/{id}"
 @using ElementaCibi.Data.FdcModels.Search;
+@using ElementaCibi.Data.FdcModels;
 @using ElementaCibi.Data.Models;
 @inject Data.Services.FoodDataCentralService FoodDataCentralService;
 
@@ -77,7 +78,7 @@
     {
         if (Id != null)
         {
-            if (DataType == "Branded")
+            if (DataType == FdcDataType.Branded)
             {
                 var result = await FoodDataCentralService.GetBrandedFoodById(Id);
                 if (result != null)

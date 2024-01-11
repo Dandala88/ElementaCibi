@@ -1,0 +1,184 @@
+{
+  "fdcId": 326196,
+  "description": "Kale, frozen, cooked, boiled, drained, without salt",
+  "publicationDate": "4/1/2019",
+  "foodNutrients": [
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "id": 1008,
+        "number": "208",
+        "name": "Energy",
+        "rank": 300,
+        "unitName": "kcal"
+      },
+      "foodNutrientDerivation": {
+        "id": 49,
+        "code": "NC",
+        "description": "Calculated",
+        "foodNutrientSource": {
+          "id": 2,
+          "code": "4",
+          "description": "Calculated or imputed"
+        }
+      },
+      "id": 2240316,
+      "amount": 36,
+      "nutrientAnalysisDetails": []
+    }
+  ],
+  "foodPortions": [
+    {
+      "id": 119431,
+      "dataPoints": 10,
+      "gramWeight": 118,
+      "sequenceNumber": 1,
+      "amount": 1,
+      "modifier": "cooked",
+      "minDateAcquired": "9/19/2015",
+      "measureUnit": {
+        "id": 1000,
+        "name": "cup",
+        "abbreviation": "cup"
+      },
+      "minYearAcquired": 2015
+    }
+  ],
+  "dataType": "Foundation",
+  "foodClass": "FinalFood",
+  "inputFoods": [
+    {
+      "id": 10905,
+      "foodDescription": "KALE, FROZEN, COOKED",
+      "inputFood": {
+        "fdcId": 326180,
+        "description": "KALE, FROZEN, COOKED",
+        "publicationDate": "4/1/2019",
+        "foodAttributeTypes": [],
+        "foodClass": "Composite",
+        "totalRefuse": 0,
+        "dataType": "Sample",
+        "foodGroup": {
+          "id": 11,
+          "code": "1100",
+          "description": "Vegetables and Vegetable Products"
+        }
+      }
+    },
+    {
+      "id": 10901,
+      "foodDescription": "KALE, FROZEN, COOKED",
+      "inputFood": {
+        "fdcId": 326141,
+        "description": "KALE, FROZEN, COOKED",
+        "publicationDate": "4/1/2019",
+        "foodAttributeTypes": [],
+        "foodClass": "Composite",
+        "totalRefuse": 0,
+        "dataType": "Sample",
+        "foodGroup": {
+          "id": 11,
+          "code": "1100",
+          "description": "Vegetables and Vegetable Products"
+        }
+      }
+    },
+    {
+      "id": 10904,
+      "foodDescription": "KALE, FROZEN, COOKED",
+      "inputFood": {
+        "fdcId": 326165,
+        "description": "KALE, FROZEN, COOKED",
+        "publicationDate": "4/1/2019",
+        "foodAttributeTypes": [],
+        "foodClass": "Composite",
+        "totalRefuse": 0,
+        "dataType": "Sample",
+        "foodGroup": {
+          "id": 11,
+          "code": "1100",
+          "description": "Vegetables and Vegetable Products"
+        }
+      }
+    },
+    {
+      "id": 10902,
+      "foodDescription": "KALE, FROZEN, COOKED",
+      "inputFood": {
+        "fdcId": 326146,
+        "description": "KALE, FROZEN, COOKED",
+        "publicationDate": "4/1/2019",
+        "foodAttributeTypes": [],
+        "foodClass": "Composite",
+        "totalRefuse": 0,
+        "dataType": "Sample",
+        "foodGroup": {
+          "id": 11,
+          "code": "1100",
+          "description": "Vegetables and Vegetable Products"
+        }
+      }
+    },
+    {
+      "id": 10900,
+      "foodDescription": "KALE, FROZEN, COOKED",
+      "inputFood": {
+        "fdcId": 326136,
+        "description": "KALE, FROZEN, COOKED",
+        "publicationDate": "4/1/2019",
+        "foodAttributeTypes": [],
+        "foodClass": "Composite",
+        "totalRefuse": 0,
+        "dataType": "Sample",
+        "foodGroup": {
+          "id": 11,
+          "code": "1100",
+          "description": "Vegetables and Vegetable Products"
+        }
+      }
+    },
+    {
+      "id": 10903,
+      "foodDescription": "KALE, FROZEN, COOKED",
+      "inputFood": {
+        "fdcId": 326151,
+        "description": "KALE, FROZEN, COOKED",
+        "publicationDate": "4/1/2019",
+        "foodAttributeTypes": [],
+        "foodClass": "Composite",
+        "totalRefuse": 0,
+        "dataType": "Sample",
+        "foodGroup": {
+          "id": 11,
+          "code": "1100",
+          "description": "Vegetables and Vegetable Products"
+        }
+      }
+    }
+  ],
+  "foodComponents": [],
+  "foodAttributes": [],
+  "nutrientConversionFactors": [
+    {
+      "id": 22562,
+      "proteinValue": 2.44,
+      "fatValue": 8.37,
+      "carbohydrateValue": 3.57,
+      "type": ".CalorieConversionFactor",
+      "name": "Calories From Proximates"
+    },
+    {
+      "id": 22563,
+      "value": 6.25,
+      "type": ".ProteinConversionFactor",
+      "name": "Protein From Nitrogen"
+    }
+  ],
+  "ndbNumber": 11236,
+  "isHistoricalReference": false,
+  "foodCategory": {
+    "id": 11,
+    "code": "1100",
+    "description": "Vegetables and Vegetable Products"
+  }
+}

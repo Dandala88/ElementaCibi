@@ -1,0 +1,99 @@
+{
+  "fdcId": 168421,
+  "description": "Kale, raw",
+  "publicationDate": "4/1/2019",
+  "foodNutrients": [
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "id": 1008,
+        "number": "208",
+        "name": "Energy",
+        "rank": 300,
+        "unitName": "kcal"
+      },
+      "foodNutrientDerivation": {
+        "id": 49,
+        "code": "NC",
+        "description": "Calculated",
+        "foodNutrientSource": {
+          "id": 2,
+          "code": "4",
+          "description": "Calculated or imputed"
+        }
+      },
+      "id": 1359225,
+      "amount": 35,
+      "dataPoints": 0
+    },
+    {
+      "type": "FoodNutrient",
+      "nutrient": {
+        "id": 1079,
+        "number": "291",
+        "name": "Fiber, total dietary",
+        "rank": 1200,
+        "unitName": "g"
+      },
+      "foodNutrientDerivation": {
+        "id": 1,
+        "code": "A",
+        "description": "Analytical",
+        "foodNutrientSource": {
+          "id": 1,
+          "code": "1",
+          "description": "Analytical or derived from analytical"
+        }
+      },
+      "id": 1359198,
+      "amount": 4.1,
+      "dataPoints": 2,
+      "max": 4.2,
+      "min": 4
+    }
+  ],
+  "foodPortions": [
+    {
+      "id": 83066,
+      "dataPoints": 9,
+      "gramWeight": 21,
+      "sequenceNumber": 1,
+      "amount": 1,
+      "modifier": "cup",
+      "measureUnit": {
+        "id": 9999,
+        "name": "undetermined",
+        "abbreviation": "undetermined"
+      }
+    }
+  ],
+  "dataType": "SR Legacy",
+  "foodClass": "FinalFood",
+  "scientificName": "Brassica oleracea (Acephala Group)",
+  "foodComponents": [],
+  "foodAttributes": [],
+  "nutrientConversionFactors": [
+    {
+      "id": 16993,
+      "value": 6.25,
+      "type": ".ProteinConversionFactor",
+      "name": "Protein From Nitrogen"
+    },
+    {
+      "id": 12159,
+      "proteinValue": 2.44,
+      "fatValue": 8.37,
+      "carbohydrateValue": 3.57,
+      "type": ".CalorieConversionFactor",
+      "name": "Calories From Proximates"
+    }
+  ],
+  "inputFoods": [],
+  "ndbNumber": 11233,
+  "isHistoricalReference": true,
+  "foodCategory": {
+    "id": 11,
+    "code": "1100",
+    "description": "Vegetables and Vegetable Products"
+  }
+}

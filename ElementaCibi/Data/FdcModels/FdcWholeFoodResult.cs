@@ -20,7 +20,7 @@ namespace ElementaCibi.Data.FdcModels
         public string? Modifier { get; set; }
 
         [JsonPropertyName("gramWeight")]
-        public int? GramWeight { get; set; }
+        public double? GramWeight { get; set; }
 
         [JsonPropertyName("portionDescription")]
         public string? PortionDescription { get; set; }

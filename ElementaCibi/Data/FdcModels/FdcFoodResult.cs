@@ -131,7 +131,7 @@ namespace ElementaCibi.Data.FdcModels
         public string? FoodDescription { get; set; }
 
         [JsonPropertyName("amount")]
-        public int? Amount { get; set; }
+        public double? Amount { get; set; }
 
         [JsonPropertyName("ingredientCode")]
         public int? IngredientCode { get; set; }
@@ -140,7 +140,7 @@ namespace ElementaCibi.Data.FdcModels
         public string? IngredientDescription { get; set; }
 
         [JsonPropertyName("ingredientWeight")]
-        public int? IngredientWeight { get; set; }
+        public double? IngredientWeight { get; set; }
 
         [JsonPropertyName("sequenceNumber")]
         public int? SequenceNumber { get; set; }
