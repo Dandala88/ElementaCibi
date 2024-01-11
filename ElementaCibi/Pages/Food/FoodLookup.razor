@@ -65,6 +65,7 @@
 
     private async Task Search()
     {
+        foodSearchResult.Clear();
         var result = await FoodDataCentralService.GetFoodBySearchTerm(foodSearch);
         if(result?.Foods != null)
         {
