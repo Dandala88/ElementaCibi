@@ -10,6 +10,7 @@ namespace ElementaCibi.Data.Models
         public string Description { get; set; } = string.Empty;
         public string DataType { get; set; } = string.Empty;
         public string Brand { get; set; } = string.Empty;
+        public List<Portion> Portions { get; set; } = new List<Portion>();
         public Nutrient? Calories { get; set; }
         public Nutrient? Fiber { get; set; }
         public float Ratio 
@@ -104,6 +105,20 @@ namespace ElementaCibi.Data.Models
             FdcId = fdcFoundationFood.FdcId;
             Description = fdcFoundationFood.Description;
             DataType = fdcFoundationFood.DataType;
+            Portions.Add(new Portion
+            {
+                Grams = 100,
+                Description = "100 G"
+            });
+            foreach (var p in fdcFoundationFood.FoodPortions)
+            {
+                var portion = new Portion
+                {
+                    Grams = p.GramWeight,
+                    Description = $"{p.Amount} {p.MeasureUnit?.Name ?? p.MeasureUnit?.Abbreviation ?? string.Empty}",
+                };
+                Portions.Add(portion);
+            }
 
             if (fdcFoundationFood?.FoodNutrients != null)
             {
@@ -136,6 +151,20 @@ namespace ElementaCibi.Data.Models
             FdcId = fdcLegacyFood.FdcId;
             Description = fdcLegacyFood.Description;
             DataType = fdcLegacyFood.DataType;
+            Portions.Add(new Portion
+            {
+                Grams = 100,
+                Description = "100 G"
+            });
+            foreach (var p in fdcLegacyFood.FoodPortions)
+            {
+                var portion = new Portion
+                {
+                    Grams = p.GramWeight,
+                    Description = $"{p.Amount} {p.Modifier ?? string.Empty}",
+                };
+                Portions.Add(portion);
+            }
 
             if (fdcLegacyFood?.FoodNutrients != null)
             {
@@ -168,6 +197,32 @@ namespace ElementaCibi.Data.Models
             FdcId = fdcSurveyFood.FdcId;
             Description = fdcSurveyFood.Description;
             DataType = fdcSurveyFood.DataType;
+            Portions.Add(new Portion
+            {
+                Grams = 100,
+                Description = "100 G"
+            });
+            foreach (var p in fdcSurveyFood.FoodPortions)
+            {
+                if (p.PortionDescription != "Quantity not specified")
+                {
+                    var portion = new Portion
+                    {
+                        Grams = p.GramWeight,
+                        Description = p.PortionDescription,
+                    };
+                    Portions.Add(portion);
+                }
+                else
+                {
+                    var portion = new Portion
+                    {
+                        Grams = p.GramWeight,
+                        Description = $"{p.GramWeight} G",
+                    };
+                    Portions.Add(portion);
+                }
+            }
 
             if (fdcSurveyFood?.FoodNutrients != null)
             {
@@ -200,6 +255,11 @@ namespace ElementaCibi.Data.Models
             FdcId = fdcExperimentalFood.FdcId;
             Description = fdcExperimentalFood.Description;
             DataType = fdcExperimentalFood.DataType;
+            Portions.Add(new Portion
+            {
+                Grams = 100,
+                Description = "100 G"
+            });
 
             if (fdcExperimentalFood?.FoodNutrients != null)
             {

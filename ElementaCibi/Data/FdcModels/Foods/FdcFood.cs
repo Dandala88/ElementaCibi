@@ -122,6 +122,9 @@ namespace ElementaCibi.Data.FdcModels.Foods
 
         [JsonPropertyName("minYearAcquired")]
         public int? MinYearAcquired { get; set; }
+
+        [JsonPropertyName("portionDescription")]
+        public string PortionDescription { get; set; } = string.Empty;
     }
 
     public class MeasureUnit

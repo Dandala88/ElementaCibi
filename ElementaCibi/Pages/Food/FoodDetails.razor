@@ -5,18 +5,20 @@
 @using ElementaCibi.Data.FdcModels.Constants;
 @inject Data.Services.FoodDataCentralService FoodDataCentralService;
 
-<h3>Food Details</h3>
-
+<h2>Food Details</h2>
 @if(Food != null)
 {
+    <h3>@Food.Description</h3>
+    <select @onchange="OnPortionChange">
+        @foreach(var p in Food.Portions)
+        {
+            <option value="@p.Grams">@p.Description</option>
+        }
+    </select>
     <table class="table">
         <tr>
             <th>FDCId</th>
             <td>@Food.FdcId</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>@Food.Description</td>
         </tr>
         <tr>
             <th>Data Type</th>
@@ -31,21 +33,11 @@
         }
         <tr>
             <th>Calories</th>
-            <td>
-                @if (Food.Calories != null)
-                {
-                    @Food.Calories.Amount@:&nbsp;@Food.Calories.Unit
-                }
-            </td>
+            <td>@Calories</td>
         </tr>
         <tr>
             <th>Fiber</th>
-            <td>
-                @if (Food.Fiber != null)
-                {
-                    @Food.Fiber.Amount@:&nbsp;@Food.Fiber.Unit
-                }
-            </td>
+            <td>@Fiber</td>
         </tr>
         <tr>
             <th>Ratio</th>
@@ -72,6 +64,9 @@
     [Parameter]
     public string? Id { get; set; }
     private Food Food = new Food();
+    private float gramScale = 1f;
+    public string Calories { get; set; } = string.Empty;
+    public string Fiber { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -79,8 +74,29 @@
         {
             var result = await FoodDataCentralService.GetFoodByIdAsync(Id);
             if (result != null)
+            {
                 Food = result;
+                SetNutrientValues();
+            }
         }
 
+    }
+
+    private void OnPortionChange(ChangeEventArgs e)
+    {
+        if (e.Value != null)
+        {
+            var grams = float.Parse(e.Value.ToString() ?? "0");
+            gramScale = grams / 100f;
+            SetNutrientValues();
+        }
+    }
+
+    private void SetNutrientValues()
+    {
+        if(Food?.Calories != null)
+                Calories = $"{(Food.Calories.Amount * gramScale).ToString()} {Food.Calories.Unit}";
+        if(Food?.Fiber != null)
+            Fiber = $"{(Food.Fiber.Amount * gramScale).ToString()} {Food.Fiber.Unit}";
     }
 }
