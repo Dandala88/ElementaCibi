@@ -1,7 +1,8 @@
-﻿@page "/food/details/{datatype}/{id}"
+﻿@page "/food/details/{id}"
 @using ElementaCibi.Data.FdcModels.Search;
 @using ElementaCibi.Data.FdcModels;
 @using ElementaCibi.Data.Models;
+@using ElementaCibi.Data.FdcModels.Constants;
 @inject Data.Services.FoodDataCentralService FoodDataCentralService;
 
 <h3>Food Details</h3>
@@ -21,10 +22,13 @@
             <th>Data Type</th>
             <td>@Food.DataType</td>
         </tr>
-        <tr>
-            <th>Brand</th>
-            <td>@Food.Brand</td>
-        </tr>
+        @if(!string.IsNullOrEmpty(Food.Brand))
+        {
+            <tr>
+                <th>Brand</th>
+                <td>@Food.Brand</td>
+            </tr>
+        }
         <tr>
             <th>Calories</th>
             <td>
@@ -70,26 +74,15 @@
 @code {
     [Parameter]
     public string? Id { get; set; }
-    [Parameter]
-    public string DataType { get; set; } = string.Empty;
     private Food Food = new Food();
 
     protected override async Task OnInitializedAsync()
     {
         if (Id != null)
         {
-            if (DataType == FdcDataType.Branded)
-            {
-                var result = await FoodDataCentralService.GetBrandedFoodById(Id);
-                if (result != null)
-                    Food.FdcFoodToFood(result);
-            }
-            else
-            {
-                var result = await FoodDataCentralService.GetWholeFoodById(Id);
-                if (result != null)
-                    Food.FdcFoodToFood(result);
-            }
+            var result = await FoodDataCentralService.GetFoodByIdAsync(Id);
+            if (result != null)
+                Food = result;
         }
 
     }

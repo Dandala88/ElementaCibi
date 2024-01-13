@@ -31,7 +31,7 @@
         </thead>
         @foreach(Food food in foodSearchResult)
         {
-            <tr @onclick="() => OpenDetails(food.FdcId, food.DataType)">
+            <tr @onclick="() => OpenDetails(food.FdcId)">
                 <td>@food.FdcId</td>
                 <td>@food.Description</td>
                 <td>@food.DataType</td>
@@ -99,9 +99,9 @@
         }
     }
 
-    private void OpenDetails(int? id, string? dataType)
+    private void OpenDetails(int? id)
     {
-        if(id != null && dataType != null)
-            NavigationManager.NavigateTo($"/food/details/{dataType}/{id}");
+        if(id != null)
+            NavigationManager.NavigateTo($"/food/details/{id}");
     }
 }

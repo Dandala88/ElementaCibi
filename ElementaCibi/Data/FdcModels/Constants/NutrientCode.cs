@@ -1,4 +1,4 @@
-﻿namespace ElementaCibi.Data.FdcModels
+﻿namespace ElementaCibi.Data.FdcModels.Constants
 {
     //The id and number codes for the FDC nutrients. These were determined from the response objects when hitting the FDC api.
     public static class NutrientCode
