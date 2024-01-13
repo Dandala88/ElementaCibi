@@ -20,13 +20,12 @@ namespace ElementaCibi.Data.FdcModels.Search
         public FoodSearchCriteria? FoodSearchCriteria { get; set; }
 
         [JsonPropertyName("foods")]
-        public List<SearchResultFood>? Foods { get; set; }
+        public List<SearchResultFood>? Foods { get; set; } = new List<SearchResultFood>();
 
         [JsonPropertyName("aggregations")]
         public Aggregations? Aggregations { get; set; }
     }
 
-    // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
     public class Aggregations
     {
         [JsonPropertyName("dataType")]
@@ -54,7 +53,7 @@ namespace ElementaCibi.Data.FdcModels.Search
     public class FinalFoodInputFood
     {
         [JsonPropertyName("foodDescription")]
-        public string? FoodDescription { get; set; }
+        public string FoodDescription { get; set; } = string.Empty;
 
         [JsonPropertyName("gramWeight")]
         public double? GramWeight { get; set; }
@@ -63,13 +62,13 @@ namespace ElementaCibi.Data.FdcModels.Search
         public int? Id { get; set; }
 
         [JsonPropertyName("portionCode")]
-        public string? PortionCode { get; set; }
+        public string PortionCode { get; set; } = string.Empty;
 
         [JsonPropertyName("portionDescription")]
-        public string? PortionDescription { get; set; }
+        public string PortionDescription { get; set; } = string.Empty;
 
         [JsonPropertyName("unit")]
-        public string? Unit { get; set; }
+        public string Unit { get; set; } = string.Empty;
 
         [JsonPropertyName("rank")]
         public int? Rank { get; set; }
@@ -84,52 +83,52 @@ namespace ElementaCibi.Data.FdcModels.Search
     public class SearchResultFood
     {
         [JsonPropertyName("fdcId")]
-        public int? FdcId { get; set; }
+        public int FdcId { get; set; }
 
         [JsonPropertyName("description")]
-        public string? Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [JsonPropertyName("dataType")]
-        public string? DataType { get; set; }
+        public string DataType { get; set; } = string.Empty;
 
         [JsonPropertyName("gtinUpc")]
-        public string? GtinUpc { get; set; }
+        public string GtinUpc { get; set; } = string.Empty;
 
         [JsonPropertyName("publishedDate")]
-        public string? PublishedDate { get; set; }
+        public string PublishedDate { get; set; } = string.Empty;
 
         [JsonPropertyName("brandOwner")]
-        public string? BrandOwner { get; set; }
+        public string BrandOwner { get; set; } = string.Empty;
 
         [JsonPropertyName("ingredients")]
-        public string? Ingredients { get; set; }
+        public string Ingredients { get; set; } = string.Empty;
 
         [JsonPropertyName("marketCountry")]
-        public string? MarketCountry { get; set; }
+        public string MarketCountry { get; set; } = string.Empty;
 
         [JsonPropertyName("foodCategory")]
-        public string? FoodCategory { get; set; }
+        public string FoodCategory { get; set; } = string.Empty;
 
         [JsonPropertyName("modifiedDate")]
-        public string? ModifiedDate { get; set; }
+        public string ModifiedDate { get; set; } = string.Empty;
 
         [JsonPropertyName("dataSource")]
-        public string? DataSource { get; set; }
+        public string DataSource { get; set; } = string.Empty;
 
         [JsonPropertyName("servingSizeUnit")]
-        public string? ServingSizeUnit { get; set; }
+        public string ServingSizeUnit { get; set; } = string.Empty;
 
         [JsonPropertyName("servingSize")]
-        public double? ServingSize { get; set; }
+        public double ServingSize { get; set; }
 
         [JsonPropertyName("householdServingFullText")]
-        public string? HouseholdServingFullText { get; set; }
+        public string HouseholdServingFullText { get; set; } = string.Empty;
 
         [JsonPropertyName("tradeChannels")]
-        public List<string>? TradeChannels { get; set; }
+        public List<string> TradeChannels { get; set; } = new List<string>();
 
         [JsonPropertyName("allHighlightFields")]
-        public string? AllHighlightFields { get; set; }
+        public string AllHighlightFields { get; set; } = string.Empty;
 
         [JsonPropertyName("score")]
         public double? Score { get; set; }
@@ -138,34 +137,34 @@ namespace ElementaCibi.Data.FdcModels.Search
         public List<object>? Microbes { get; set; }
 
         [JsonPropertyName("foodNutrients")]
-        public List<FoodNutrient>? FoodNutrients { get; set; }
+        public List<FoodNutrient> FoodNutrients { get; set; } = new List<FoodNutrient>();
 
         [JsonPropertyName("finalFoodInputFoods")]
-        public List<FinalFoodInputFood>? FinalFoodInputFoods { get; set; }
+        public List<FinalFoodInputFood>? FinalFoodInputFoods { get; set; } = new List<FinalFoodInputFood>();
 
         [JsonPropertyName("foodMeasures")]
-        public List<FoodMeasure>? FoodMeasures { get; set; }
+        public List<FoodMeasure>? FoodMeasures { get; set; } = new List<FoodMeasure>();
 
         [JsonPropertyName("foodAttributes")]
         public List<object>? FoodAttributes { get; set; }
 
         [JsonPropertyName("foodAttributeTypes")]
-        public List<FoodAttributeType>? FoodAttributeTypes { get; set; }
+        public List<FoodAttributeType>? FoodAttributeTypes { get; set; } = new List<FoodAttributeType>();
 
         [JsonPropertyName("foodVersionIds")]
         public List<object>? FoodVersionIds { get; set; }
 
         [JsonPropertyName("brandName")]
-        public string? BrandName { get; set; }
+        public string BrandName { get; set; } = string.Empty;
 
         [JsonPropertyName("packageWeight")]
-        public string? PackageWeight { get; set; }
+        public string PackageWeight { get; set; } = string.Empty;
 
         [JsonPropertyName("commonNames")]
-        public string? CommonNames { get; set; }
+        public string CommonNames { get; set; } = string.Empty;
 
         [JsonPropertyName("additionalDescriptions")]
-        public string? AdditionalDescriptions { get; set; }
+        public string AdditionalDescriptions { get; set; } = string.Empty;
 
         [JsonPropertyName("foodCode")]
         public int? FoodCode { get; set; }
@@ -177,22 +176,22 @@ namespace ElementaCibi.Data.FdcModels.Search
         public int? NdbNumber { get; set; }
 
         [JsonPropertyName("scientificName")]
-        public string? ScientificName { get; set; }
+        public string ScientificName { get; set; } = string.Empty;
 
         [JsonPropertyName("mostRecentAcquisitionDate")]
-        public string? MostRecentAcquisitionDate { get; set; }
+        public string MostRecentAcquisitionDate { get; set; } = string.Empty;
     }
 
     public class FoodAttribute
     {
         [JsonPropertyName("value")]
-        public string? Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         [JsonPropertyName("id")]
         public int? Id { get; set; }
 
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [JsonPropertyName("sequenceNumber")]
         public int? SequenceNumber { get; set; }
@@ -201,40 +200,40 @@ namespace ElementaCibi.Data.FdcModels.Search
     public class FoodAttributeType
     {
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [JsonPropertyName("description")]
-        public string? Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         [JsonPropertyName("id")]
         public int? Id { get; set; }
 
         [JsonPropertyName("foodAttributes")]
-        public List<FoodAttribute>? FoodAttributes { get; set; }
+        public List<FoodAttribute> FoodAttributes { get; set; } = new List<FoodAttribute>();
     }
 
     public class FoodMeasure
     {
         [JsonPropertyName("disseminationText")]
-        public string? DisseminationText { get; set; }
+        public string DisseminationText { get; set; } = string.Empty;
 
         [JsonPropertyName("gramWeight")]
-        public double? GramWeight { get; set; }
+        public double GramWeight { get; set; }
 
         [JsonPropertyName("id")]
         public int? Id { get; set; }
 
         [JsonPropertyName("modifier")]
-        public string? Modifier { get; set; }
+        public string Modifier { get; set; } = string.Empty;
 
         [JsonPropertyName("rank")]
         public int? Rank { get; set; }
 
         [JsonPropertyName("measureUnitAbbreviation")]
-        public string? MeasureUnitAbbreviation { get; set; }
+        public string MeasureUnitAbbreviation { get; set; } = string.Empty;
 
         [JsonPropertyName("measureUnitName")]
-        public string? MeasureUnitName { get; set; }
+        public string MeasureUnitName { get; set; } = string.Empty;
 
         [JsonPropertyName("measureUnitId")]
         public int? MeasureUnitId { get; set; }
@@ -246,34 +245,34 @@ namespace ElementaCibi.Data.FdcModels.Search
         public int? NutrientId { get; set; }
 
         [JsonPropertyName("nutrientName")]
-        public string? NutrientName { get; set; }
+        public string NutrientName { get; set; } = string.Empty;
 
         [JsonPropertyName("nutrientNumber")]
-        public string? NutrientNumber { get; set; }
+        public string NutrientNumber { get; set; } = string.Empty;
 
         [JsonPropertyName("unitName")]
-        public string? UnitName { get; set; }
+        public string UnitName { get; set; } = string.Empty;
 
         [JsonPropertyName("derivationCode")]
-        public string? DerivationCode { get; set; }
+        public string DerivationCode { get; set; } = string.Empty;
 
         [JsonPropertyName("derivationDescription")]
-        public string? DerivationDescription { get; set; }
+        public string DerivationDescription { get; set; } = string.Empty;
 
         [JsonPropertyName("derivationId")]
         public int? DerivationId { get; set; }
 
         [JsonPropertyName("value")]
-        public double? Value { get; set; }
+        public float Value { get; set; }
 
         [JsonPropertyName("foodNutrientSourceId")]
         public int? FoodNutrientSourceId { get; set; }
 
         [JsonPropertyName("foodNutrientSourceCode")]
-        public string? FoodNutrientSourceCode { get; set; }
+        public string FoodNutrientSourceCode { get; set; } = string.Empty;
 
         [JsonPropertyName("foodNutrientSourceDescription")]
-        public string? FoodNutrientSourceDescription { get; set; }
+        public string FoodNutrientSourceDescription { get; set; } = string.Empty;
 
         [JsonPropertyName("rank")]
         public int? Rank { get; set; }
@@ -303,10 +302,10 @@ namespace ElementaCibi.Data.FdcModels.Search
     public class FoodSearchCriteria
     {
         [JsonPropertyName("query")]
-        public string? Query { get; set; }
+        public string Query { get; set; } = string.Empty;
 
         [JsonPropertyName("generalSearchInput")]
-        public string? GeneralSearchInput { get; set; }
+        public string GeneralSearchInput { get; set; } = string.Empty;
 
         [JsonPropertyName("pageNumber")]
         public int? PageNumber { get; set; }

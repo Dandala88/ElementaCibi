@@ -73,6 +73,14 @@ namespace ElementaCibi.Data.Services
                             return food;
                         }
                         break;
+                    case FdcDataType.Experimental:
+                        var fdcExperimentalFood = JsonSerializer.Deserialize<FdcExperimentalFood>(content);
+                        if (fdcExperimentalFood != null)
+                        {
+                            food.FdcExperimentalFoodToFood(fdcExperimentalFood);
+                            return food;
+                        }
+                        break;
                 }
             }
 

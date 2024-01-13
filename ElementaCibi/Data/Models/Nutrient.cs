@@ -2,7 +2,7 @@
 {
     public class Nutrient
     {
-        public double Amount { get; set; } = 0.0;
+        public float Amount { get; set; }
         public string Unit { get; set; } = string.Empty;
     }
 }

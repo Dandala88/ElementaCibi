@@ -6,30 +6,30 @@ namespace ElementaCibi.Data.Models
 {
     public class Food
     {
-        public int? FdcId { get; set; }
+        public int FdcId { get; set; }
         public string Description { get; set; } = string.Empty;
         public string DataType { get; set; } = string.Empty;
         public string Brand { get; set; } = string.Empty;
         public Nutrient? Calories { get; set; }
         public Nutrient? Fiber { get; set; }
-        public double Ratio 
+        public float Ratio 
         { 
             get
             {
                 if(Fiber?.Amount != null && Calories?.Amount != null)
                     return Fiber.Amount / Calories.Amount;
                 else
-                    return 0.0;
+                    return 0f;
             }
         }
-        public double Hundred 
+        public float Hundred 
         {
             get 
             {
                 if (Fiber?.Amount != null && Calories?.Amount != null)
                     return 100 / (Fiber.Amount / Calories.Amount);
                 else
-                    return double.PositiveInfinity;
+                    return float.PositiveInfinity;
             }
         }
 
@@ -48,8 +48,8 @@ namespace ElementaCibi.Data.Models
                 {
                     Calories = new Nutrient
                     {
-                        Amount = calories.Value ?? 0.0,
-                        Unit = calories.UnitName ?? string.Empty,
+                        Amount = calories.Value,
+                        Unit = calories.UnitName,
                     };
                 }
 
@@ -59,8 +59,8 @@ namespace ElementaCibi.Data.Models
                 {
                     Fiber = new Nutrient
                     {
-                        Amount = fiber.Value ?? 0.0,
-                        Unit = fiber.UnitName ?? string.Empty,
+                        Amount = fiber.Value,
+                        Unit = fiber.UnitName,
                     };
                 }
             }
@@ -183,6 +183,38 @@ namespace ElementaCibi.Data.Models
                 }
 
                 var fiber = fdcSurveyFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Fiber.Id)?.FirstOrDefault();
+
+                if (fiber?.Nutrient != null)
+                {
+                    Fiber = new Nutrient
+                    {
+                        Amount = fiber.Amount,
+                        Unit = fiber.Nutrient.UnitName,
+                    };
+                }
+            }
+        }
+
+        public void FdcExperimentalFoodToFood(FdcExperimentalFood fdcExperimentalFood)
+        {
+            FdcId = fdcExperimentalFood.FdcId;
+            Description = fdcExperimentalFood.Description;
+            DataType = fdcExperimentalFood.DataType;
+
+            if (fdcExperimentalFood?.FoodNutrients != null)
+            {
+                var calories = fdcExperimentalFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Calorie.Id)?.FirstOrDefault();
+
+                if (calories?.Nutrient != null)
+                {
+                    Calories = new Nutrient
+                    {
+                        Amount = calories.Amount,
+                        Unit = calories.Nutrient.UnitName,
+                    };
+                }
+
+                var fiber = fdcExperimentalFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Fiber.Id)?.FirstOrDefault();
 
                 if (fiber?.Nutrient != null)
                 {
