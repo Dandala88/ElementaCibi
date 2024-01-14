@@ -1,0 +1,14 @@
+﻿@using ElementaCibi.Data.Models;
+<select @onchange="OnPortionChange">
+    @foreach (var p in Food.Portions)
+    {
+        <option value="@p.Grams">@p.Description</option>
+    }
+</select>
+@code {
+    public Food Food { get; set; } = new Food();
+    public void OnPortionChange()
+    {
+        
+    }
+}

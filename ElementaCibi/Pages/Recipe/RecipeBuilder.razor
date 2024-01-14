@@ -1,11 +1,11 @@
-﻿@page "/food/lookup"
-@page "/food/lookup/{foodterm}"
+﻿@page "/food/recipe/builder"
+@page "/food/recipe/builder/{foodterm}"
 @using ElementaCibi.Data.FdcModels.Search;
 @using ElementaCibi.Data.Models;
 @inject Data.Services.FoodDataCentralService FoodDataCentralService;
 @inject NavigationManager NavigationManager;
 
-<h3>Food Lookup</h3>
+<h3>Recipe Builder</h3>
 
 <EditForm Model="@foodSearch" OnValidSubmit="Search">
     <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -23,33 +23,16 @@
                 <th>Description</th>
                 <th>Data Type</th>
                 <th>Brand</th>
-                <th>Calories</th>
-                <th>Fiber</th>
-                <th>Ratio</th>
-                <th>💯</th>
+                <th>Portion</th>
             </tr>
         </thead>
         @foreach(Food food in foodSearchResult)
         {
-            <tr @onclick="() => OpenDetails(food.FdcId)">
+            <tr>
                 <td>@food.FdcId</td>
                 <td>@food.Description</td>
                 <td>@food.DataType</td>
                 <td>@food.Brand</td>
-                <td>
-                    @if (food.Calories != null)
-                    {
-                        @food.Calories.Amount@:&nbsp;@food.Calories.Unit
-                    }
-                </td>
-                <td>
-                    @if (food.Fiber != null)
-                    {
-                        @food.Fiber.Amount@:&nbsp;@food.Fiber.Unit
-                    }
-                </td>
-                <td>@food.Ratio</td>
-                <td>@food.Hundred</td>
             </tr>
         }
     </table>
@@ -62,10 +45,6 @@
             background-color: dodgerblue;
         }
     </style>
-}
-else
-{
-    <b>No results</b>
 }
 
 @code {
@@ -88,7 +67,7 @@ else
         if (FoodTerm != foodSearch.Term)
         {
             FoodTerm = foodSearch.Term;
-            NavigationManager.NavigateTo($"/food/lookup/{FoodTerm}");
+            NavigationManager.NavigateTo($"/food/recipe/builder/{FoodTerm}");
         }
         foodSearchResult.Clear();
         var result = await FoodDataCentralService.GetFoodBySearchTerm(foodSearch);
@@ -103,9 +82,7 @@ else
         }
     }
 
-    private void OpenDetails(int? id)
+    private void AddIngredient(int id, Portion portion)
     {
-        if(id != null)
-            NavigationManager.NavigateTo($"/food/details/{id}");
     }
 }
