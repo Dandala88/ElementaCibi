@@ -1,14 +1,23 @@
 ﻿@using ElementaCibi.Data.Models;
+@using System.Text.Json
 <select @onchange="OnPortionChange">
     @foreach (var p in Food.Portions)
     {
-        <option value="@p.Grams">@p.Description</option>
+        <option value="@JsonSerializer.Serialize(p)">@p.Description</option>
     }
 </select>
 @code {
+    [Parameter]
     public Food Food { get; set; } = new Food();
-    public void OnPortionChange()
+    [Parameter]
+    public EventCallback<Portion> PortionValueChanged { get; set; }
+
+    public void OnPortionChange(ChangeEventArgs e)
     {
-        
+        if (e?.Value != null)
+        {
+            var portion = JsonSerializer.Deserialize<Portion>((string)e.Value);
+            PortionValueChanged.InvokeAsync(portion);
+        }
     }
 }

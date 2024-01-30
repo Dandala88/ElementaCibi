@@ -1,7 +1,9 @@
 ﻿@page "/food/recipe/builder"
 @page "/food/recipe/builder/{foodterm}"
+@using ElementaCibi.Data.FdcModels.Constants
 @using ElementaCibi.Data.FdcModels.Search;
 @using ElementaCibi.Data.Models;
+@using ElementaCibi.Shared.Components
 @inject Data.Services.FoodDataCentralService FoodDataCentralService;
 @inject NavigationManager NavigationManager;
 
@@ -11,9 +13,13 @@
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <ValidationSummary></ValidationSummary>
     <InputText @bind-Value="foodSearch.Term"></InputText>
+    <label><InputCheckbox @bind-Value="IncludeSurvey"></InputCheckbox> Survey</label>
+    <label><InputCheckbox @bind-Value="IncludeLegacy"></InputCheckbox> Legacy</label>
+    <label><InputCheckbox @bind-Value="IncludeFoundation"></InputCheckbox> Foundation</label>
+    <label><InputCheckbox @bind-Value="IncludeBranded"></InputCheckbox> Branded</label>
+    <label><InputCheckbox @bind-Value="IncludeExperimental"></InputCheckbox> Experimental</label>
     <button type="submit" class="btn btn-primary">Search</button>
 </EditForm>
-
 @if(foodSearchResult.Count > 0)
 {
     <table class="table">
@@ -37,8 +43,11 @@
             {
                 if (foodDetail?.Portions.Count > 0)
                 {
-                    <tr>@foodDetail.Portions[0].Description</tr>
-                    <tr>Add Ingredient</tr>
+                    <tr>
+                        <td><PortionSelector Food=@foodDetail PortionValueChanged="OnPortionValueChange"></PortionSelector></td>
+                        <td><input @bind-value=CurrentSelectedQuantity type="text" placeholder="Quantity"/></td>
+                        <td><a href="" @onclick="(e) => AddIngredient(foodDetail, currentSelectedPortion, CurrentSelectedQuantity)">Add</a></td>
+                    </tr>
                 }
             }
 
@@ -58,13 +67,27 @@
 @code {
     [Parameter]
     public string? FoodTerm { get; set; }
+    [Parameter]
+    public bool IncludeBranded { get; set; } = false;
+    [Parameter]
+    public bool IncludeSurvey { get; set; } = true;
+    [Parameter]
+    public bool IncludeLegacy { get; set; } = true;
+    [Parameter]
+    public bool IncludeFoundation { get; set; } = true;
+    [Parameter]
+    public bool IncludeExperimental { get; set; } = false;
+
+    private float CurrentSelectedQuantity { get; set; } = 1;
+
     private FoodSearch foodSearch = new FoodSearch();
     private List<Food> foodSearchResult = new List<Food>();
     private Food? foodDetail;
+    private Portion currentSelectedPortion = new Portion();
 
     protected override async Task OnParametersSetAsync()
     {
-        if (!string.IsNullOrEmpty(FoodTerm))
+        if (!string.IsNullOrEmpty(FoodTerm) && FoodTerm != foodSearch.Term)
         {
             foodSearch.Term = FoodTerm;
             await Search();
@@ -84,6 +107,9 @@
         {
             foreach(SearchResultFood searchResultFood in result.Foods)
             {
+                if (!ShouldShowFood(searchResultFood))
+                    continue;
+
                 var f = new Food();
                 f.FdcSearchToFood(searchResultFood);
                 foodSearchResult.Add(f);
@@ -96,7 +122,29 @@
         foodDetail = await FoodDataCentralService.GetFoodByIdAsync(fdcId.ToString());
     }
 
-    private void AddIngredient(int id, Portion portion)
+    private void OnPortionValueChange(Portion portion)
     {
+        currentSelectedPortion = portion;
+    }
+
+    private void AddIngredient(Food food, Portion portion, float quantity)
+    {
+        var total = portion.Grams * quantity;
+        //TODO
+    }
+
+    private bool ShouldShowFood(SearchResultFood searchResultFood)
+    {
+        if (searchResultFood.DataType == FdcDataType.Branded && !IncludeBranded)
+            return false;
+        if (searchResultFood.DataType == FdcDataType.Foundation && !IncludeFoundation)
+            return false;
+        if (searchResultFood.DataType == FdcDataType.Legacy && !IncludeLegacy)
+            return false;
+        if (searchResultFood.DataType == FdcDataType.Survey && !IncludeSurvey)
+            return false;
+        if (searchResultFood.DataType == FdcDataType.Experimental && !IncludeExperimental)
+            return false;
+        return true;
     }
 }

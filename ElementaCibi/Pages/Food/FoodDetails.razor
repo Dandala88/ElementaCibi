@@ -3,18 +3,14 @@
 @using ElementaCibi.Data.FdcModels;
 @using ElementaCibi.Data.Models;
 @using ElementaCibi.Data.FdcModels.Constants;
+@using ElementaCibi.Shared.Components
 @inject Data.Services.FoodDataCentralService FoodDataCentralService;
 
 <h2>Food Details</h2>
 @if(Food != null)
 {
     <h3>@Food.Description</h3>
-    <select @onchange="OnPortionChange">
-        @foreach(var p in Food.Portions)
-        {
-            <option value="@p.Grams">@p.Description</option>
-        }
-    </select>
+    <PortionSelector Food=@Food PortionValueChanged="OnPortionValueChanged"></PortionSelector>
     <table class="table">
         <tr>
             <th>FDCId</th>
@@ -82,11 +78,11 @@
 
     }
 
-    private void OnPortionChange(ChangeEventArgs e)
+    private void OnPortionValueChanged(Portion portion)
     {
-        if (e.Value != null)
+        if (portion != null)
         {
-            var grams = float.Parse(e.Value.ToString() ?? "0");
+            var grams = portion.Grams;
             gramScale = grams / 100f;
             SetNutrientValues();
         }
