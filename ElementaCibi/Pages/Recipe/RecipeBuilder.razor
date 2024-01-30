@@ -23,17 +23,25 @@
                 <th>Description</th>
                 <th>Data Type</th>
                 <th>Brand</th>
-                <th>Portion</th>
             </tr>
         </thead>
         @foreach(Food food in foodSearchResult)
         {
-            <tr>
+            <tr @onclick="() => ShowDetails(food.FdcId)">
                 <td>@food.FdcId</td>
                 <td>@food.Description</td>
                 <td>@food.DataType</td>
                 <td>@food.Brand</td>
             </tr>
+            if(foodDetail != null && food.FdcId == foodDetail.FdcId)
+            {
+                if (foodDetail?.Portions.Count > 0)
+                {
+                    <tr>@foodDetail.Portions[0].Description</tr>
+                    <tr>Add Ingredient</tr>
+                }
+            }
+
         }
     </table>
 
@@ -52,6 +60,7 @@
     public string? FoodTerm { get; set; }
     private FoodSearch foodSearch = new FoodSearch();
     private List<Food> foodSearchResult = new List<Food>();
+    private Food? foodDetail;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -80,6 +89,11 @@
                 foodSearchResult.Add(f);
             }
         }
+    }
+
+    private async Task ShowDetails(int fdcId)
+    {
+        foodDetail = await FoodDataCentralService.GetFoodByIdAsync(fdcId.ToString());
     }
 
     private void AddIngredient(int id, Portion portion)
