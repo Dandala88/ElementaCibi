@@ -74,6 +74,11 @@ namespace ElementaCibi.Data.Models
             DataType = fdcBrandedFood.DataType;
             Brand = fdcBrandedFood.BrandOwner;
 
+            Portions.Add(new Portion
+            {
+                Description = $"{fdcBrandedFood.ServingSize} {fdcBrandedFood.ServingSizeUnit}",
+            });
+
             if (fdcBrandedFood?.FoodNutrients != null)
             {
                 var calories = fdcBrandedFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Calorie.Id)?.FirstOrDefault();
