@@ -4,11 +4,13 @@
 @using ElementaCibi.Data.FdcModels.Search;
 @using ElementaCibi.Data.Models;
 @using ElementaCibi.Shared.Components
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject Data.Services.FoodDataCentralService FoodDataCentralService;
 @inject NavigationManager NavigationManager;
+@inject ProtectedLocalStorage LocalStorage;
 
 <h3>Recipe Builder</h3>
-
+<RecipeSelector></RecipeSelector>
 <EditForm Model="@foodSearch" OnValidSubmit="Search">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <ValidationSummary></ValidationSummary>

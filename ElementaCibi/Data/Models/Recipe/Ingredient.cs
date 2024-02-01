@@ -1,6 +1,6 @@
 ﻿namespace ElementaCibi.Data.Models.Recipe
 {
-    public class RecipeFood: Food
+    public class Ingredient: Food
     {
         public Portion? Portion { get; set; }
     }
