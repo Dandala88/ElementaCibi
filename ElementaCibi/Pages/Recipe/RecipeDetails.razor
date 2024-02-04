@@ -4,6 +4,7 @@
 
 <h3>Recipe Details</h3>
 <RecipeEditor @ref="recipeEditor" RecipeValueChanged="OnRecipeValueChanged"></RecipeEditor>
+<hr />
 <table class="table">
     <tr>
         <th>Calories</th>
@@ -22,12 +23,6 @@
         <td>@hundred</td>
     </tr>
 </table>
-
-<style>
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-</style>
 
 @code {
     private RecipeEditor? recipeEditor;
@@ -54,8 +49,10 @@
             {
                 if (i.Food.Calories != null)
                 {
+                    //If grams are equal to 0 then the food is likely a branded food and we want the ratio to then be 1 since there are no portion sizes for branded foods
+                    var grams = i.Portion.Grams == 0 ? 100 : i.Portion.Grams;
                     var caloriesPerHundredGrams = i.Food.Calories.Amount;
-                    var ratio = i.Portion.Grams / 100f;
+                    var ratio = grams / 100f;
                     calories += caloriesPerHundredGrams * ratio * i.Quantity;
                 }
             }

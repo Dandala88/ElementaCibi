@@ -2,6 +2,7 @@
 @using ElementaCibi.Data.Models.Recipe
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using System.Text.Json
+@inject NavigationManager NavigationManager;
 @inject ProtectedLocalStorage LocalStorage;
 
 <select @onchange="OnRecipeChange">
@@ -20,11 +21,12 @@
             <option value="@JsonSerializer.Serialize(r)">@r.Name</option>
         }
     }
-    <option value=@NewRecipeOption>New Recipe</option>
+    <option style="cursor:crosshair" value=@NewRecipeOption>New Recipe</option>
 </select>
 @if (SelectedRecipe != null)
 {
-    <button class="btn btn-danger" style="margin:10px" @onclick="DeleteRecipe"><span class="oi oi-trash"></span></button>
+    <button class="btn btn-success" style="margin:4px" @onclick="GoToRecipeDetails"><span class="oi oi-beaker"></span></button>
+    <button class="btn btn-danger" style="margin:4px" @onclick="DeleteRecipe"><span class="oi oi-trash"></span></button>
 }
 @if(showNewRecipeForm)
 {
@@ -56,20 +58,6 @@
             </tr>
         }
     </table>
-
-    <style>
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: dodgerblue;
-        }
-
-        table {
-            border: 1px solid black;
-        }
-    </style>
 }
 @code {
     public const string NewRecipeOption = "newrecipe";
@@ -196,5 +184,11 @@
                 //Couldn't find recipe to remove, probably throw here, seems impossible
             }
         }
+    }
+
+    private void GoToRecipeDetails()
+    {
+        NavigationManager.NavigateTo($"/food/recipe/details");
+        //TODO add to the recipe details page an id in route and preselect that recipe
     }
 }

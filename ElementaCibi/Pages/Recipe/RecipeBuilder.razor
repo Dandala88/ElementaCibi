@@ -12,8 +12,6 @@
 
 <h3>Recipe Builder</h3>
 <RecipeEditor @ref="recipeEditor"></RecipeEditor>
-<button class="btn btn-success" style="margin:10px" @onclick="GoToRecipeDetails"><span class="oi oi-beaker"></span></button>
-
 <hr />
 <EditForm Model="@foodSearch" OnValidSubmit="Search">
     <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -61,7 +59,7 @@
                                     <td><PortionSelector Food=@foodDetail PortionValueChanged="OnPortionValueChange"></PortionSelector></td>
                                     <td>×</td>
                                     <td><input @bind-value=CurrentSelectedQuantity type="text" placeholder="Quantity" /></td>
-                                    <td style="cursor:crosshair;" @onclick="(e) => AddIngredient(foodDetail, currentSelectedPortion, CurrentSelectedQuantity)">Add</td>
+                                    <td><button class="btn btn-primary"style="cursor:crosshair;" @onclick="(e) => AddIngredient(foodDetail, currentSelectedPortion, CurrentSelectedQuantity)">Add</button></td>
                                 </tr>
                             </table>
                         </td>
@@ -71,15 +69,6 @@
 
         }
     </table>
-
-    <style>
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        tr:hover {
-            background-color: dodgerblue;
-        }
-    </style>
 }
 
 @code {
@@ -152,11 +141,13 @@
         if (recipeEditor != null)
         {
             recipeEditor.AddIngredient(new Ingredient
-                {
-                    Food = food,
-                    Portion = portion,
-                    Quantity = quantity,
-                });
+            {
+                Food = food,
+                Portion = portion,
+                Quantity = quantity,
+            });
+            CurrentSelectedQuantity = 1;
+            foodDetail = null;
         }
     }
 
@@ -173,11 +164,5 @@
         if (searchResultFood.DataType == FdcDataType.Experimental && !IncludeExperimental)
             return false;
         return true;
-    }
-
-    private void GoToRecipeDetails()
-    {
-        NavigationManager.NavigateTo($"/food/recipe/details");
-        //TODO add to the recipe details page an id in route and preselect that recipe
     }
 }
