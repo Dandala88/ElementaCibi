@@ -12,6 +12,8 @@
 
 <h3>Recipe Builder</h3>
 <RecipeEditor @ref="recipeEditor"></RecipeEditor>
+<button class="btn btn-success" style="margin:10px" @onclick="GoToRecipeDetails"><span class="oi oi-beaker"></span></button>
+
 <hr />
 <EditForm Model="@foodSearch" OnValidSubmit="Search">
     <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -171,5 +173,11 @@
         if (searchResultFood.DataType == FdcDataType.Experimental && !IncludeExperimental)
             return false;
         return true;
+    }
+
+    private void GoToRecipeDetails()
+    {
+        NavigationManager.NavigateTo($"/food/recipe/details");
+        //TODO add to the recipe details page an id in route and preselect that recipe
     }
 }

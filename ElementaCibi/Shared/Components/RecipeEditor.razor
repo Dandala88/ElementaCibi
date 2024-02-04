@@ -94,6 +94,7 @@
             {
                 Recipes = storedRecipes.Value;
                 SelectedRecipe = Recipes[0];
+                await RecipeValueChanged.InvokeAsync(SelectedRecipe);
             }
         }
         catch(Exception ex)
@@ -102,7 +103,7 @@
         }
     }
 
-    public void OnRecipeChange(ChangeEventArgs e)
+    public async Task OnRecipeChange(ChangeEventArgs e)
     {
         SelectedRecipe = null;
         showNewRecipeForm = false;
@@ -116,7 +117,7 @@
             {
                 var recipe = JsonSerializer.Deserialize<Recipe>((string)e.Value);
                 SelectedRecipe = recipe;
-                RecipeValueChanged.InvokeAsync(recipe);
+                await RecipeValueChanged.InvokeAsync(recipe);
             }
         }
     }
