@@ -11,8 +11,28 @@
 @inject ProtectedLocalStorage LocalStorage;
 
 <h3>Recipe Builder</h3>
-<RecipeEditor @ref="recipeEditor"></RecipeEditor>
+<RecipeEditor @ref="recipeEditor" RecipeValueChanged="OnRecipeValueChanged"></RecipeEditor>
+<h4>Details</h4>
+<table class="table">
+    <tr>
+        <th>Calories</th>
+        <td>@calories</td>
+    </tr>
+    <tr>
+        <th>Fiber</th>
+        <td>@fiber</td>
+    </tr>
+    <tr>
+        <th>Ratio</th>
+        <td>@ratio</td>
+    </tr>
+    <tr>
+        <th>💯</th>
+        <td>@hundred</td>
+    </tr>
+</table>
 <hr />
+<h4>Add Ingredients</h4>
 <EditForm Model="@foodSearch" OnValidSubmit="Search">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <ValidationSummary></ValidationSummary>
@@ -84,6 +104,11 @@
     public bool IncludeFoundation { get; set; } = true;
     [Parameter]
     public bool IncludeExperimental { get; set; } = false;
+
+    private float calories;
+    private float fiber;
+    private float ratio;
+    private float hundred;
 
     private RecipeEditor? recipeEditor;
 
@@ -164,5 +189,75 @@
         if (searchResultFood.DataType == FdcDataType.Experimental && !IncludeExperimental)
             return false;
         return true;
+    }
+
+    private float GetCalories()
+    {
+        if (recipeEditor?.SelectedRecipe != null)
+        {
+            var recipe = recipeEditor.SelectedRecipe;
+            var calories = 0f;
+            foreach (var i in recipe.Ingredients)
+            {
+                if (i.Food.Calories != null)
+                {
+                    //If grams are equal to 0 then the food is likely a branded food and we want the ratio to then be 1 since there are no portion sizes for branded foods
+                    var grams = i.Portion.Grams == 0 ? 100 : i.Portion.Grams;
+                    var caloriesPerHundredGrams = i.Food.Calories.Amount;
+                    var ratio = grams / 100f;
+                    calories += caloriesPerHundredGrams * ratio * i.Quantity;
+                }
+            }
+
+            return calories;
+        }
+        return 0f;
+    }
+
+    private float GetFiber()
+    {
+        if (recipeEditor?.SelectedRecipe != null)
+        {
+            var recipe = recipeEditor.SelectedRecipe;
+            var fiber = 0f;
+            foreach (var i in recipe.Ingredients)
+            {
+                if (i.Food.Fiber != null)
+                {
+                    var fiberPerHundredGrams = i.Food.Fiber.Amount;
+                    var ratio = i.Portion.Grams / 100f;
+                    fiber += fiberPerHundredGrams * ratio * i.Quantity;
+                }
+            }
+
+            return fiber;
+        }
+        return 0f;
+    }
+
+    private float GetRatio()
+    {
+        if (recipeEditor?.SelectedRecipe != null)
+        {
+            return fiber / calories;
+        }
+        return 0f;
+    }
+
+    private float GetHundred()
+    {
+        if (recipeEditor?.SelectedRecipe != null)
+        {
+            return 100 / (fiber / calories);
+        }
+        return 0f;
+    }
+
+    private void OnRecipeValueChanged()
+    {
+        calories = GetCalories();
+        fiber = GetFiber();
+        ratio = GetRatio();
+        hundred = GetHundred();
     }
 }

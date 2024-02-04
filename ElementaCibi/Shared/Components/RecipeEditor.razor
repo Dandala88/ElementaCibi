@@ -25,7 +25,6 @@
 </select>
 @if (SelectedRecipe != null)
 {
-    <button class="btn btn-success" style="margin:4px" @onclick="GoToRecipeDetails"><span class="oi oi-beaker"></span></button>
     <button class="btn btn-danger" style="margin:4px" @onclick="DeleteRecipe"><span class="oi oi-trash"></span></button>
 }
 @if(showNewRecipeForm)
@@ -182,11 +181,6 @@
                 //Couldn't find recipe to remove, probably throw here, seems impossible
             }
         }
-    }
-
-    public void GoToRecipeDetails()
-    {
-        NavigationManager.NavigateTo($"/food/recipe/details");
     }
 
     public void GoToFoodDetails(int id)
