@@ -136,11 +136,11 @@
         currentSelectedPortion = portion;
     }
 
-    private void AddIngredient(Food food, Portion portion, float quantity)
+    private async Task AddIngredient(Food food, Portion portion, float quantity)
     {
         if (recipeEditor != null)
         {
-            recipeEditor.AddIngredient(new Ingredient
+            await recipeEditor.AddIngredient(new Ingredient
             {
                 Food = food,
                 Portion = portion,

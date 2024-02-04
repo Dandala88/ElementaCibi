@@ -81,8 +81,7 @@
             if(storedRecipes.Value != null)
             {
                 Recipes = storedRecipes.Value;
-                SelectedRecipe = Recipes[0];
-                await RecipeValueChanged.InvokeAsync(SelectedRecipe);
+                await SelectRecipe(Recipes[0]);
             }
         }
         catch(Exception ex)
@@ -104,22 +103,20 @@
             else
             {
                 var recipe = JsonSerializer.Deserialize<Recipe>((string)e.Value);
-                SelectedRecipe = recipe;
-                await RecipeValueChanged.InvokeAsync(recipe);
+                await SelectRecipe(recipe);
             }
         }
     }
 
-    public void AddIngredient(Ingredient ingredient)
+    public async Task AddIngredient(Ingredient ingredient)
     {
         var recipeToUpdate = Recipes.Where(r => r.Id == SelectedRecipe?.Id).FirstOrDefault();
         if(recipeToUpdate != null)
         {
             ingredient.Id = Guid.NewGuid();
             recipeToUpdate.Ingredients.Add(ingredient);
-            LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
-            SelectedRecipe = recipeToUpdate;
-            StateHasChanged();
+            await LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
+            await SelectRecipe(recipeToUpdate);
         }
         else
         {
@@ -127,7 +124,7 @@
         }
     }
 
-    public void DeleteIngredient(Ingredient ingredient)
+    public async Task DeleteIngredient(Ingredient ingredient)
     {
         var recipeToUpdate = Recipes.Where(r => r.Id == SelectedRecipe?.Id).FirstOrDefault();
         if (recipeToUpdate != null)
@@ -136,9 +133,9 @@
             if (ingredientToRemove != null)
             {
                 recipeToUpdate.Ingredients.Remove(ingredientToRemove);
-                LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
-                SelectedRecipe = recipeToUpdate;
-                StateHasChanged();
+                await LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
+                await SelectRecipe(recipeToUpdate);
+
             }
             else
             {
@@ -151,17 +148,17 @@
         }
     }
 
-    public void NewRecipe()
+    public async Task NewRecipe()
     {
         newRecipe.Id = Guid.NewGuid();
         Recipes.Add(newRecipe);
-        LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
+        await LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
         showNewRecipeForm = false;
-        SelectedRecipe = newRecipe;
+        await SelectRecipe(newRecipe);
         newRecipe = new Recipe();
     }
 
-    public void DeleteRecipe()
+    public async Task DeleteRecipe()
     {
         if (SelectedRecipe != null)
         {
@@ -171,8 +168,8 @@
                 var response = Recipes.Remove(recipeToRemove);
                 if (response)
                 {
-                    SelectedRecipe = null;
-                    LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
+                    await SelectRecipe(null);
+                    await LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
                 }
                 else
                 {
@@ -186,9 +183,24 @@
         }
     }
 
-    private void GoToRecipeDetails()
+    public void GoToRecipeDetails()
     {
         NavigationManager.NavigateTo($"/food/recipe/details");
-        //TODO add to the recipe details page an id in route and preselect that recipe
+    }
+
+    public async Task SelectRecipeById(string id)
+    {
+        var recipe = Recipes.Where(r => r.Id.ToString() == id).FirstOrDefault();
+        await SelectRecipe(recipe);
+    }
+
+    private async Task SelectRecipe(Recipe? recipe)
+    {
+        if (recipe != null)
+        {
+            SelectedRecipe = recipe;
+            StateHasChanged();
+            await RecipeValueChanged.InvokeAsync(recipe);
+        }
     }
 }
