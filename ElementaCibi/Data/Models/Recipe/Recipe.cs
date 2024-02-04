@@ -4,6 +4,7 @@ namespace ElementaCibi.Data.Models.Recipe
 {
     public class Recipe
     {
+        public Guid Id { get; set; }
         [Required]
         [MinLength(2)]
         [MaxLength(50)]

@@ -1,0 +1,199 @@
+﻿@using ElementaCibi.Data.FdcModels.Constants
+@using ElementaCibi.Data.Models.Recipe
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using System.Text.Json
+@inject ProtectedLocalStorage LocalStorage;
+
+<select @onchange="OnRecipeChange">
+    @if (Recipes.Count == 0 || SelectedRecipe == null)
+    {
+        <option selected>...</option>
+    }
+    @foreach (var r in Recipes)
+    {
+        if (SelectedRecipe != null && r == SelectedRecipe)
+        {
+            <option selected value="@JsonSerializer.Serialize(r)">@r.Name</option>
+        }
+        else
+        {
+            <option value="@JsonSerializer.Serialize(r)">@r.Name</option>
+        }
+    }
+    <option value=@NewRecipeOption>New Recipe</option>
+</select>
+@if (SelectedRecipe != null)
+{
+    <button class="btn btn-danger" style="margin:10px" @onclick="DeleteRecipe"><span class="oi oi-trash"></span></button>
+}
+@if(showNewRecipeForm)
+{
+    <EditForm Model="@newRecipe" OnValidSubmit="NewRecipe">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+        <InputText @bind-Value="newRecipe.Name"></InputText>
+        <button type="submit" class="btn btn-primary">Add</button>
+    </EditForm>
+}
+@if (SelectedRecipe != null)
+{
+    <h4>Ingredients</h4>
+    <table>
+        <tr>
+            <th>Food</th>
+            <th>Portion</th>
+            <th>   </th>
+            <th>Quantity</th>
+        </tr>
+        @foreach(var i in SelectedRecipe.Ingredients)
+        {
+            <tr>
+                <td>@i.Food.Description</td>
+                <td>@i.Portion.Description</td>
+                <td> × </td>
+                <td>@i.Quantity</td>
+                <td><button class="btn btn-danger" @onclick="(e) => DeleteIngredient(i)"><span class="oi oi-trash"></span></button></td>
+            </tr>
+        }
+    </table>
+
+    <style>
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: dodgerblue;
+        }
+
+        table {
+            border: 1px solid black;
+        }
+    </style>
+}
+@code {
+    public const string NewRecipeOption = "newrecipe";
+
+    [Parameter]
+    public List<Recipe> Recipes { get; set; } = new List<Recipe>();
+    [Parameter]
+    public EventCallback<Recipe> RecipeValueChanged { get; set; }
+    [Parameter]
+    public Recipe? SelectedRecipe { get; set; }
+
+    public bool showNewRecipeForm;
+    public Recipe newRecipe = new Recipe();
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            var storedRecipes = await LocalStorage.GetAsync<List<Recipe>>(UserData.RecipesKey);
+
+            if(storedRecipes.Value != null)
+            {
+                Recipes = storedRecipes.Value;
+                SelectedRecipe = Recipes[0];
+            }
+        }
+        catch(Exception ex)
+        {
+            var t = ex;
+        }
+    }
+
+    public void OnRecipeChange(ChangeEventArgs e)
+    {
+        SelectedRecipe = null;
+        showNewRecipeForm = false;
+        if (e?.Value != null)
+        {
+            if ((string)e.Value == NewRecipeOption)
+            {
+                showNewRecipeForm = true;
+            }
+            else
+            {
+                var recipe = JsonSerializer.Deserialize<Recipe>((string)e.Value);
+                SelectedRecipe = recipe;
+                RecipeValueChanged.InvokeAsync(recipe);
+            }
+        }
+    }
+
+    public void AddIngredient(Ingredient ingredient)
+    {
+        var recipeToUpdate = Recipes.Where(r => r.Id == SelectedRecipe?.Id).FirstOrDefault();
+        if(recipeToUpdate != null)
+        {
+            ingredient.Id = Guid.NewGuid();
+            recipeToUpdate.Ingredients.Add(ingredient);
+            LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
+            SelectedRecipe = recipeToUpdate;
+            StateHasChanged();
+        }
+        else
+        {
+            //Adding ingredient to what??
+        }
+    }
+
+    public void DeleteIngredient(Ingredient ingredient)
+    {
+        var recipeToUpdate = Recipes.Where(r => r.Id == SelectedRecipe?.Id).FirstOrDefault();
+        if (recipeToUpdate != null)
+        {
+            var ingredientToRemove = recipeToUpdate.Ingredients.Where(i => i.Id == ingredient.Id).FirstOrDefault();
+            if (ingredientToRemove != null)
+            {
+                recipeToUpdate.Ingredients.Remove(ingredientToRemove);
+                LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
+                SelectedRecipe = recipeToUpdate;
+                StateHasChanged();
+            }
+            else
+            {
+                //could not find ingredient
+            }
+        }
+        else
+        {
+            //removing ingredient from what??
+        }
+    }
+
+    public void NewRecipe()
+    {
+        newRecipe.Id = Guid.NewGuid();
+        Recipes.Add(newRecipe);
+        LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
+        showNewRecipeForm = false;
+        SelectedRecipe = newRecipe;
+        newRecipe = new Recipe();
+    }
+
+    public void DeleteRecipe()
+    {
+        if (SelectedRecipe != null)
+        {
+            var recipeToRemove = Recipes.Where(r => r.Id == SelectedRecipe.Id)?.FirstOrDefault();
+            if (recipeToRemove != null)
+            {
+                var response = Recipes.Remove(recipeToRemove);
+                if (response)
+                {
+                    SelectedRecipe = null;
+                    LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
+                }
+                else
+                {
+                    //Couldn't find recipe to remove, probably throw here, seems impossible
+                }
+            }
+            else
+            {
+                //Couldn't find recipe to remove, probably throw here, seems impossible
+            }
+        }
+    }
+}

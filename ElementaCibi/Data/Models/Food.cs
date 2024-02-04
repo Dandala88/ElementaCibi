@@ -1,6 +1,7 @@
 ﻿using ElementaCibi.Data.FdcModels.Constants;
 using ElementaCibi.Data.FdcModels.Foods;
 using ElementaCibi.Data.FdcModels.Search;
+using System.Text.Json.Serialization;
 
 namespace ElementaCibi.Data.Models
 {
@@ -23,6 +24,7 @@ namespace ElementaCibi.Data.Models
                     return 0f;
             }
         }
+        [JsonNumberHandling(JsonNumberHandling.AllowNamedFloatingPointLiterals)]
         public float Hundred 
         {
             get 

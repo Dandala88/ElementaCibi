@@ -12,6 +12,11 @@
     [Parameter]
     public EventCallback<Portion> PortionValueChanged { get; set; }
 
+    protected override void OnInitialized()
+    {
+        PortionValueChanged.InvokeAsync(Food.Portions.FirstOrDefault());
+    }
+
     public void OnPortionChange(ChangeEventArgs e)
     {
         if (e?.Value != null)

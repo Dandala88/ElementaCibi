@@ -1,7 +1,10 @@
 ﻿namespace ElementaCibi.Data.Models.Recipe
 {
-    public class Ingredient: Food
+    public class Ingredient
     {
-        public Portion? Portion { get; set; }
+        public Guid Id { get; set; }
+        public Food Food { get; set; } = new Food();
+        public Portion Portion { get; set; } = new Portion();
+        public float Quantity { get; set; }
     }
 }

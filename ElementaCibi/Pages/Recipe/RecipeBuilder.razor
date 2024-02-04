@@ -1,16 +1,18 @@
 ﻿@page "/food/recipe/builder"
 @page "/food/recipe/builder/{foodterm}"
-@using ElementaCibi.Data.FdcModels.Constants
+@using ElementaCibi.Data.FdcModels.Constants;
 @using ElementaCibi.Data.FdcModels.Search;
 @using ElementaCibi.Data.Models;
-@using ElementaCibi.Shared.Components
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using ElementaCibi.Shared.Components;
+@using ElementaCibi.Data.Models.Recipe;
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @inject Data.Services.FoodDataCentralService FoodDataCentralService;
 @inject NavigationManager NavigationManager;
 @inject ProtectedLocalStorage LocalStorage;
 
 <h3>Recipe Builder</h3>
-<RecipeSelector></RecipeSelector>
+<RecipeEditor @ref="recipeEditor"></RecipeEditor>
+<hr />
 <EditForm Model="@foodSearch" OnValidSubmit="Search">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <ValidationSummary></ValidationSummary>
@@ -46,9 +48,21 @@
                 if (foodDetail?.Portions.Count > 0)
                 {
                     <tr>
-                        <td><PortionSelector Food=@foodDetail PortionValueChanged="OnPortionValueChange"></PortionSelector></td>
-                        <td><input @bind-value=CurrentSelectedQuantity type="text" placeholder="Quantity"/></td>
-                        <td><a href="" @onclick="(e) => AddIngredient(foodDetail, currentSelectedPortion, CurrentSelectedQuantity)">Add</a></td>
+                        <td>
+                            <table>
+                                <tr>
+                                    <th>Portion</th>
+                                    <th> </th>
+                                    <th>Quantity</th>
+                                </tr>
+                                <tr>
+                                    <td><PortionSelector Food=@foodDetail PortionValueChanged="OnPortionValueChange"></PortionSelector></td>
+                                    <td>×</td>
+                                    <td><input @bind-value=CurrentSelectedQuantity type="text" placeholder="Quantity" /></td>
+                                    <td style="cursor:crosshair;" @onclick="(e) => AddIngredient(foodDetail, currentSelectedPortion, CurrentSelectedQuantity)">Add</td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                 }
             }
@@ -79,6 +93,8 @@
     public bool IncludeFoundation { get; set; } = true;
     [Parameter]
     public bool IncludeExperimental { get; set; } = false;
+
+    private RecipeEditor? recipeEditor;
 
     private float CurrentSelectedQuantity { get; set; } = 1;
 
@@ -131,8 +147,15 @@
 
     private void AddIngredient(Food food, Portion portion, float quantity)
     {
-        var total = portion.Grams * quantity;
-        //TODO
+        if (recipeEditor != null)
+        {
+            recipeEditor.AddIngredient(new Ingredient
+                {
+                    Food = food,
+                    Portion = portion,
+                    Quantity = quantity,
+                });
+        }
     }
 
     private bool ShouldShowFood(SearchResultFood searchResultFood)
