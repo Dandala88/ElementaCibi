@@ -1,5 +1,6 @@
 ﻿@using ElementaCibi.Data.FdcModels.Constants
 @using ElementaCibi.Data.Models.Recipe
+@using ElementaCibi.Data.Models;
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using System.Text.Json
 @inject NavigationManager NavigationManager;
@@ -50,11 +51,24 @@
         {
             <tr>
                 <td>@i.Food.Description</td>
-                <td>@i.Portion.Description</td>
-                <td> × </td>
-                <td>@i.Quantity</td>
-                <td><button class="btn btn-success" @onclick="(e) => GoToFoodDetails(i.Food.FdcId)"><span class="oi oi-beaker"></span></button></td>
-                <td><button class="btn btn-danger" @onclick="(e) => DeleteIngredient(i)"><span class="oi oi-trash"></span></button></td>
+                @if (editingIngredient != null && editingIngredient.Id == i.Id)
+                {
+                    <td><PortionSelector Food=@i.Food PortionValueChanged="OnEditPortionValueChanged"></PortionSelector></td>
+                    <td> × </td>
+                    <td><input @bind-value=editSelectedQuantity type="text" placeholder="Quantity" /></td>
+
+                    <td><button class="btn btn-success" @onclick="() => EditIngredient(i)"><span class="oi oi-check"></span></button></td>
+                    <td><button class="btn btn-danger" @onclick="CancelEditIngredient"><span class="oi oi-x"></span></button></td>
+                }
+                else
+                {
+                    <td>@i.Portion.Description</td>
+                    <td> × </td>
+                    <td>@i.Quantity</td>
+                    <td><button class="btn btn-info" @onclick="() => GoToFoodDetails(i.Food.FdcId)"><span class="oi oi-beaker"></span></button></td>
+                    <td><button class="btn btn-warning" @onclick="() => StartEditIngredient(i)"><span class="oi oi-pencil"></span></button></td>
+                    <td><button class="btn btn-danger" @onclick="() => DeleteIngredient(i)"><span class="oi oi-trash"></span></button></td>
+                }
             </tr>
         }
     </table>
@@ -71,6 +85,9 @@
 
     public bool showNewRecipeForm;
     public Recipe newRecipe = new Recipe();
+    private Ingredient? editingIngredient;
+    private float editSelectedQuantity;
+    private Portion? editSelectedPortion;
 
     protected async override Task OnInitializedAsync()
     {
@@ -146,6 +163,53 @@
         {
             //removing ingredient from what??
         }
+    }
+
+    private void StartEditIngredient(Ingredient ingredient)
+    {
+        //If not editing an ingredient or editing a new ingredient set it
+        if(editingIngredient == null || editingIngredient.Id != ingredient.Id)
+        {
+            editingIngredient = ingredient;
+            editSelectedQuantity = 1;
+        }
+    }
+
+    private void CancelEditIngredient()
+    {
+        editingIngredient = null;
+    }
+
+    private async Task EditIngredient(Ingredient ingredient)
+    {
+        var recipeToUpdate = Recipes.Where(r => r.Id == SelectedRecipe?.Id).FirstOrDefault();
+        if (recipeToUpdate != null)
+        {
+            var ingredientToEdit = recipeToUpdate.Ingredients.Where(i => i.Id == ingredient.Id).FirstOrDefault();
+            if (ingredientToEdit != null)
+            {
+                if (editSelectedPortion != null)
+                    ingredientToEdit.Portion = editSelectedPortion;
+                ingredientToEdit.Quantity = editSelectedQuantity;
+                await LocalStorage.SetAsync(UserData.RecipesKey, Recipes);
+                await SelectRecipe(recipeToUpdate);
+                editingIngredient = null;
+
+            }
+            else
+            {
+                //could not find ingredient
+            }
+        }
+        else
+        {
+            //removing ingredient from what??
+        }
+    }
+
+    public void OnEditPortionValueChanged(Portion portion)
+    {
+        editSelectedPortion = portion;
     }
 
     public async Task NewRecipe()
