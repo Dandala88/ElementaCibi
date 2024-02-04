@@ -54,6 +54,7 @@
                 <td>@i.Portion.Description</td>
                 <td> × </td>
                 <td>@i.Quantity</td>
+                <td><button class="btn btn-success" @onclick="(e) => GoToFoodDetails(i.Food.FdcId)"><span class="oi oi-beaker"></span></button></td>
                 <td><button class="btn btn-danger" @onclick="(e) => DeleteIngredient(i)"><span class="oi oi-trash"></span></button></td>
             </tr>
         }
@@ -186,6 +187,11 @@
     public void GoToRecipeDetails()
     {
         NavigationManager.NavigateTo($"/food/recipe/details");
+    }
+
+    public void GoToFoodDetails(int id)
+    {
+        NavigationManager.NavigateTo($"/food/details/{id}");
     }
 
     public async Task SelectRecipeById(string id)
