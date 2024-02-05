@@ -1,0 +1,25 @@
+﻿@page "/day/tracker"
+@using ElementaCibi.Shared.Components
+@using ElementaCibi.Data.Models.Recipe;
+<h3>Day Tracker</h3>
+<table>
+    <tr>
+        <th>Time</th>
+        <th>Recipe</th>
+        <th>Calories</th>
+    </tr>
+    @for(int i = 0; i < 24; i++)
+    {
+        <tr>
+            <td>@i:00</td>
+            <td><RecipeSelector RecipeValueChanged="OnRecipeValueChanged"></RecipeSelector></td>
+            <td></td>
+        </tr>
+    }
+</table>
+@code {
+    private void OnRecipeValueChanged(Recipe recipe)
+    {
+        
+    }
+}

@@ -1,5 +1,5 @@
-﻿@page "/food/recipe/builder"
-@page "/food/recipe/builder/{foodterm}"
+﻿@page "/recipe/builder"
+@page "/recipe/builder/{foodterm}"
 @using ElementaCibi.Data.FdcModels.Constants;
 @using ElementaCibi.Data.FdcModels.Search;
 @using ElementaCibi.Data.Models;
@@ -133,7 +133,7 @@
         if (FoodTerm != foodSearch.Term)
         {
             FoodTerm = foodSearch.Term;
-            NavigationManager.NavigateTo($"/food/recipe/builder/{FoodTerm}");
+            NavigationManager.NavigateTo($"/recipe/builder/{FoodTerm}");
         }
         foodSearchResult.Clear();
         var result = await FoodDataCentralService.GetFoodBySearchTerm(foodSearch);
