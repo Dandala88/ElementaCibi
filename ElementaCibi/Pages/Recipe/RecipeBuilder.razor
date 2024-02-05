@@ -224,8 +224,10 @@
             {
                 if (i.Food.Fiber != null)
                 {
+                    //If grams are equal to 0 then the food is likely a branded food and we want the ratio to then be 1 since there are no portion sizes for branded foods
+                    var grams = i.Portion.Grams == 0 ? 100 : i.Portion.Grams;
                     var fiberPerHundredGrams = i.Food.Fiber.Amount;
-                    var ratio = i.Portion.Grams / 100f;
+                    var ratio = grams / 100f;
                     fiber += fiberPerHundredGrams * ratio * i.Quantity;
                 }
             }
