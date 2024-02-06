@@ -3,5 +3,6 @@
     public class UserData
     {
         public const string RecipesKey = "recipes";
+        public const string DaysKey = "days";
     }
 }

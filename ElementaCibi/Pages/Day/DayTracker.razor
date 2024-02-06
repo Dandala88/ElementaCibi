@@ -1,25 +1,120 @@
 ﻿@page "/day/tracker"
+@using ElementaCibi.Data.FdcModels.Constants;
+@using ElementaCibi.Data.Models.Day;
 @using ElementaCibi.Shared.Components
 @using ElementaCibi.Data.Models.Recipe;
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject ProtectedLocalStorage LocalStorage;
+
 <h3>Day Tracker</h3>
-<table>
-    <tr>
-        <th>Time</th>
-        <th>Recipe</th>
-        <th>Calories</th>
-    </tr>
-    @for(int i = 0; i < 24; i++)
-    {
+<h4>@DateOnly.FromDateTime(DateTime.Now)</h4>
+
+@if (!addingMeal)
+{
+    <button class="btn btn-primary" @onclick="() => addingMeal = true">Add Meal</button>
+}
+else
+{
+    <RecipeSelector RecipeValueChanged="OnRecipeValueChanged"></RecipeSelector>
+    <input @bind-value="currentAddingTime" type="time">
+    <button class="btn btn-success" @onclick="() => AddMeal()"><span class="oi oi-check"></span></button>
+    <button class="btn btn-danger" @onclick="() => addingMeal = false"><span class="oi oi-x"></span></button>
+}
+
+<hr />
+@foreach(var day in days)
+{
+    <h5>@day.Date</h5>
+    <table>
         <tr>
-            <td>@i:00</td>
-            <td><RecipeSelector RecipeValueChanged="OnRecipeValueChanged"></RecipeSelector></td>
-            <td></td>
+            <th>Time</th>
+            <th>Meal</th>
+            <th>Calories</th>
+            <th>Fiber</th>
         </tr>
-    }
-</table>
+        @foreach(var meal in day.Meals)
+        {
+            @if (meal.Recipe != null)
+            {
+                <tr>
+                    <td> @meal.Time </td>
+                    <td> @meal.Recipe.Name </td>
+                    <td>@meal.Recipe.Calories</td>
+                    <td>@meal.Recipe.Fiber</td>
+                </tr>
+            }
+        }
+        <tr>
+            <td></td>
+            <td><b>Totals</b></td>
+            <td><b>@Today()?.Calories</b></td>
+            <td><b>@Today()?.Fiber</b></td>
+        </tr>
+    </table>
+}
+
 @code {
+    private RecipeSelector? recipeSelector;
+    private bool addingMeal;
+    private Recipe? currentAddingRecipe;
+    private DateTime currentAddingTime;
+    private List<Day> days = new List<Day>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var dayStorage = await LocalStorage.GetAsync<List<Day>>(UserData.DaysKey);
+        if (dayStorage.Value != null)
+        {
+            days = dayStorage.Value;
+        }
+        StateHasChanged();
+    }
+
+
+    private async Task AddMeal()
+    {
+        if (currentAddingRecipe != null)
+        {
+            addingMeal = false;
+            var timeOnly = TimeOnly.FromDateTime(currentAddingTime);
+            var meal = new Meal
+                {
+                    Id = Guid.NewGuid(),
+                    Recipe = currentAddingRecipe,
+                    Time = timeOnly.ToString(),
+                };
+
+            var today = Today();
+
+            if (today != null)
+            {
+                today.Meals.Add(meal);
+            }
+            else
+            {
+                var newDay = new Day
+                {
+                    Id = Guid.NewGuid(),
+                        Meals = new List<Meal>
+                {
+                    meal,
+                },
+                        Date = DateOnly.FromDateTime(DateTime.Now).ToString(),
+                    };
+                days.Add(newDay);
+            }
+            await LocalStorage.SetAsync(UserData.DaysKey, days);
+        }
+    }
+
     private void OnRecipeValueChanged(Recipe recipe)
     {
-        
+        currentAddingRecipe = recipe;
+    }
+
+    private Day? Today()
+    {
+        return days.Where(d => DateOnly.Parse(d.Date) == DateOnly.FromDateTime(DateTime.Now))?.FirstOrDefault();
+
     }
 }

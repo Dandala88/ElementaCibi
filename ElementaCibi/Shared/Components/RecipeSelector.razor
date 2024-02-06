@@ -7,7 +7,6 @@
 @inject ProtectedLocalStorage LocalStorage;
 
 <select @onchange="OnRecipeChange">
-    <option selected>None</option>
     @foreach (var r in Recipes)
     {
         if (SelectedRecipe != null && r == SelectedRecipe)
@@ -38,7 +37,7 @@
             if (storedRecipes.Value != null)
             {
                 Recipes = storedRecipes.Value;
-                await SelectRecipe(null);
+                await SelectRecipe(Recipes[0]);
             }
         }
         catch (Exception ex)
