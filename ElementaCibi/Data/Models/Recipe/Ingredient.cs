@@ -43,6 +43,7 @@ namespace ElementaCibi.Data.Models.Recipe
             }
         }
 
+        [JsonNumberHandling(JsonNumberHandling.AllowNamedFloatingPointLiterals)]
         public float Ratio
         {
             get
