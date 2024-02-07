@@ -16,18 +16,45 @@
 else
 {
     <RecipeSelector RecipeValueChanged="OnRecipeValueChanged"></RecipeSelector>
-    <input @bind-value="currentAddingTime" type="time">
     <button class="btn btn-success" @onclick="() => AddMeal()"><span class="oi oi-check"></span></button>
     <button class="btn btn-danger" @onclick="() => addingMeal = false"><span class="oi oi-x"></span></button>
 }
-
-<hr />
-@foreach(var day in days)
+@if (Today()?.Meals != null)
 {
+    var todaysMeals = Today()?.Meals ?? new List<Meal>();
+    <table>
+        <tr>
+            <th>Meal</th>
+            <th>Calories</th>
+            <th>Fiber</th>
+        </tr>
+        @foreach (var meal in todaysMeals)
+        {
+            @if (meal.Recipe != null)
+            {
+                <tr>
+                    <td> @meal.Recipe.Name </td>
+                    <td>@meal.Recipe.Calories</td>
+                    <td>@meal.Recipe.Fiber</td>
+                    <td><button class="btn btn-danger" @onclick="() => DeleteMeal(meal.Id)"><span class="oi oi-trash"></span></button></td>
+                </tr>
+            }
+
+        }
+        <tr>
+            <td><b>Totals</b></td>
+            <td><b>@Today()?.Calories</b></td>
+            <td><b>@Today()?.Fiber</b></td>
+        </tr>
+    </table>
+}
+<hr />
+@for(int i = days.Count-1; i >= 0; i--)
+{
+    var day = days[i];
     <h5>@day.Date</h5>
     <table>
         <tr>
-            <th>Time</th>
             <th>Meal</th>
             <th>Calories</th>
             <th>Fiber</th>
@@ -37,7 +64,6 @@ else
             @if (meal.Recipe != null)
             {
                 <tr>
-                    <td> @meal.Time </td>
                     <td> @meal.Recipe.Name </td>
                     <td>@meal.Recipe.Calories</td>
                     <td>@meal.Recipe.Fiber</td>
@@ -45,10 +71,9 @@ else
             }
         }
         <tr>
-            <td></td>
             <td><b>Totals</b></td>
-            <td><b>@Today()?.Calories</b></td>
-            <td><b>@Today()?.Fiber</b></td>
+            <td><b>@day?.Calories</b></td>
+            <td><b>@day?.Fiber</b></td>
         </tr>
     </table>
 }
@@ -76,12 +101,10 @@ else
         if (currentAddingRecipe != null)
         {
             addingMeal = false;
-            var timeOnly = TimeOnly.FromDateTime(currentAddingTime);
             var meal = new Meal
                 {
                     Id = Guid.NewGuid(),
                     Recipe = currentAddingRecipe,
-                    Time = timeOnly.ToString(),
                 };
 
             var today = Today();
@@ -104,6 +127,23 @@ else
                 days.Add(newDay);
             }
             await LocalStorage.SetAsync(UserData.DaysKey, days);
+        }
+    }
+
+    private async Task DeleteMeal(Guid id)
+    {
+        var today = Today();
+        if (today?.Meals != null)
+        {
+            var dayToUpdate = days.Where(d => d.Id == today.Id).FirstOrDefault();
+
+            var mealToRemove = dayToUpdate?.Meals.Where(m => m.Id == id).FirstOrDefault();
+            if (mealToRemove != null)
+            {
+                dayToUpdate?.Meals.Remove(mealToRemove);
+                await LocalStorage.SetAsync(UserData.DaysKey, days);
+                StateHasChanged();
+            }
         }
     }
 

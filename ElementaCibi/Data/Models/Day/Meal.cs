@@ -5,6 +5,5 @@
     {
         public Guid Id { get; set; }
         public Recipe? Recipe { get; set; }
-        public string Time { get; set; } = string.Empty;
     }
 }
