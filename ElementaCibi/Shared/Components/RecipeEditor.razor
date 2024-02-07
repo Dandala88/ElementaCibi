@@ -3,6 +3,7 @@
 @using ElementaCibi.Data.Models;
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using System.Text.Json
+@using System.Text;
 @inject NavigationManager NavigationManager;
 @inject ProtectedLocalStorage LocalStorage;
 
@@ -27,6 +28,7 @@
 @if (SelectedRecipe != null)
 {
     <button class="btn btn-danger" style="margin:4px" @onclick="DeleteRecipe"><span class="oi oi-trash"></span></button>
+    <a class="btn btn-primary" href="data:text/json;charset=utf-8,@JsonSerializer.Serialize(SelectedRecipe)" download=@GetRecipeDownloadName() role="button"><span class="oi oi-cloud-download"></span></a>
 }
 @if(showNewRecipeForm)
 {
@@ -35,7 +37,12 @@
         <ValidationSummary></ValidationSummary>
         <InputText @bind-Value="newRecipe.Name"></InputText>
         <button type="submit" class="btn btn-primary">Add</button>
+        <label>
+            <span class="btn btn-primary oi oi-cloud-upload"></span>
+            <InputFile OnChange="UploadRecipe" style="display:none;"></InputFile>
+        </label>
     </EditForm>
+
 }
 @if (SelectedRecipe != null)
 {
@@ -266,5 +273,28 @@
             StateHasChanged();
             await RecipeValueChanged.InvokeAsync(recipe);
         }
+    }
+
+    private async Task UploadRecipe(InputFileChangeEventArgs e)
+    {
+        var result = new StringBuilder();
+        var file = e.File;
+        using (var reader = new StreamReader(e.File.OpenReadStream()))
+        {
+            result.AppendLine(await reader.ReadLineAsync());
+        }
+        var recipeJson = result.ToString();
+
+        var recipe = JsonSerializer.Deserialize<Recipe>(recipeJson);
+        if (recipe != null)
+        {
+            newRecipe = recipe;
+            await NewRecipe();
+        }
+    }
+
+    private string GetRecipeDownloadName()
+    {
+        return $"ec-{SelectedRecipe?.Name}-{SelectedRecipe?.Id}.json";
     }
 }
