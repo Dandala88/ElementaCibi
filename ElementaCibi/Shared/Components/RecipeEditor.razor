@@ -13,7 +13,7 @@
     }
     @foreach (var r in Recipes)
     {
-        if (SelectedRecipe != null && r == SelectedRecipe)
+        if(Recipes.IndexOf(r) == 0)
         {
             <option selected value="@JsonSerializer.Serialize(r)">@r.Name</option>
         }

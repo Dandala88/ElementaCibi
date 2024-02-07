@@ -9,14 +9,7 @@
 <select @onchange="OnRecipeChange">
     @foreach (var r in Recipes)
     {
-        if (SelectedRecipe != null && r == SelectedRecipe)
-        {
-            <option selected value="@JsonSerializer.Serialize(r)">@r.Name</option>
-        }
-        else
-        {
-            <option value="@JsonSerializer.Serialize(r)">@r.Name</option>
-        }
+        <option value="@JsonSerializer.Serialize(r)">@r.Name</option>
     }
 </select>
 
