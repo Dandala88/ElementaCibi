@@ -28,6 +28,7 @@
 @if (SelectedRecipe != null)
 {
     <button class="btn btn-danger" style="margin:4px" @onclick="DeleteRecipe"><span class="oi oi-trash"></span></button>
+    <button class="btn btn-warning" style="margin:2px" @onclick="DuplicateRecipe"><span class="oi oi-layers"></span></button>
     <a class="btn btn-primary" href="data:text/json;charset=utf-8,@JsonSerializer.Serialize(SelectedRecipe)" download=@GetRecipeDownloadName() role="button"><span class="oi oi-cloud-download"></span></a>
 }
 @if(showNewRecipeForm)
@@ -227,6 +228,18 @@
         showNewRecipeForm = false;
         await SelectRecipe(newRecipe);
         newRecipe = new Recipe();
+    }
+
+    public async Task DuplicateRecipe()
+    {
+        if (SelectedRecipe != null)
+        {
+            newRecipe = new Recipe
+            {
+                Ingredients = SelectedRecipe.Ingredients,
+            };
+            showNewRecipeForm = true;
+        }
     }
 
     public async Task DeleteRecipe()
