@@ -43,30 +43,7 @@ namespace ElementaCibi.Data.Models
             DataType = fdcSearchResult.DataType ?? string.Empty;
             Brand = fdcSearchResult.BrandOwner ?? string.Empty;
 
-            if (fdcSearchResult?.FoodNutrients != null)
-            {
-                var calories = fdcSearchResult.FoodNutrients.Where(n => n.NutrientId == NutrientCode.Calorie.Id)?.FirstOrDefault();
-
-                if (calories?.Value != null)
-                {
-                    Calories = new Nutrient
-                    {
-                        Amount = calories.Value,
-                        Unit = calories.UnitName,
-                    };
-                }
-
-                var fiber = fdcSearchResult.FoodNutrients.Where(n => n.NutrientId == NutrientCode.Fiber.Id)?.FirstOrDefault();
-
-                if (fiber?.Value != null)
-                {
-                    Fiber = new Nutrient
-                    {
-                        Amount = fiber.Value,
-                        Unit = fiber.UnitName,
-                    };
-                }
-            }
+            SetSearchFoodNutrients(fdcSearchResult.FoodNutrients);
         }
 
         public void FdcBrandedFoodToFood(FdcBrandedFood fdcBrandedFood)
@@ -81,30 +58,7 @@ namespace ElementaCibi.Data.Models
                 Description = $"{fdcBrandedFood.ServingSize} {fdcBrandedFood.ServingSizeUnit}",
             });
 
-            if (fdcBrandedFood?.FoodNutrients != null)
-            {
-                var calories = fdcBrandedFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Calorie.Id)?.FirstOrDefault();
-
-                if (calories?.Nutrient != null)
-                {
-                    Calories = new Nutrient
-                    {
-                        Amount = calories.Amount,
-                        Unit = calories.Nutrient.UnitName,
-                    };
-                }
-
-                var fiber = fdcBrandedFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Fiber.Id)?.FirstOrDefault();
-
-                if (fiber?.Nutrient != null)
-                {
-                    Fiber = new Nutrient
-                    {
-                        Amount = fiber.Amount,
-                        Unit = fiber.Nutrient.UnitName,
-                    };
-                }
-            }
+            SetNutrients(fdcBrandedFood.FoodNutrients);
         }
 
         public void FdcFoundationFoodToFood(FdcFoundationFood fdcFoundationFood)
@@ -127,30 +81,7 @@ namespace ElementaCibi.Data.Models
                 Portions.Add(portion);
             }
 
-            if (fdcFoundationFood?.FoodNutrients != null)
-            {
-                var calories = fdcFoundationFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Calorie.Id)?.FirstOrDefault();
-
-                if (calories?.Nutrient != null)
-                {
-                    Calories = new Nutrient
-                    {
-                        Amount = calories.Amount,
-                        Unit = calories.Nutrient.UnitName,
-                    };
-                }
-
-                var fiber = fdcFoundationFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Fiber.Id)?.FirstOrDefault();
-
-                if (fiber?.Nutrient != null)
-                {
-                    Fiber = new Nutrient
-                    {
-                        Amount = fiber.Amount,
-                        Unit = fiber.Nutrient.UnitName,
-                    };
-                }
-            }
+            SetNutrients(fdcFoundationFood?.FoodNutrients);
         }
 
         public void FdcLegacyFoodToFood(FdcLegacyFood fdcLegacyFood)
@@ -173,30 +104,7 @@ namespace ElementaCibi.Data.Models
                 Portions.Add(portion);
             }
 
-            if (fdcLegacyFood?.FoodNutrients != null)
-            {
-                var calories = fdcLegacyFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Calorie.Id)?.FirstOrDefault();
-
-                if (calories?.Nutrient != null)
-                {
-                    Calories = new Nutrient
-                    {
-                        Amount = calories.Amount,
-                        Unit = calories.Nutrient.UnitName,
-                    };
-                }
-
-                var fiber = fdcLegacyFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Fiber.Id)?.FirstOrDefault();
-
-                if (fiber?.Nutrient != null)
-                {
-                    Fiber = new Nutrient
-                    {
-                        Amount = fiber.Amount,
-                        Unit = fiber.Nutrient.UnitName,
-                    };
-                }
-            }
+            SetNutrients(fdcLegacyFood.FoodNutrients);
         }
 
         public void FdcSurveyFoodToFood(FdcSurveyFood fdcSurveyFood)
@@ -231,30 +139,7 @@ namespace ElementaCibi.Data.Models
                 }
             }
 
-            if (fdcSurveyFood?.FoodNutrients != null)
-            {
-                var calories = fdcSurveyFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Calorie.Id)?.FirstOrDefault();
-
-                if (calories?.Nutrient != null)
-                {
-                    Calories = new Nutrient
-                    {
-                        Amount = calories.Amount,
-                        Unit = calories.Nutrient.UnitName,
-                    };
-                }
-
-                var fiber = fdcSurveyFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Fiber.Id)?.FirstOrDefault();
-
-                if (fiber?.Nutrient != null)
-                {
-                    Fiber = new Nutrient
-                    {
-                        Amount = fiber.Amount,
-                        Unit = fiber.Nutrient.UnitName,
-                    };
-                }
-            }
+            SetNutrients(fdcSurveyFood.FoodNutrients);
         }
 
         public void FdcExperimentalFoodToFood(FdcExperimentalFood fdcExperimentalFood)
@@ -268,9 +153,14 @@ namespace ElementaCibi.Data.Models
                 Description = "100 G"
             });
 
-            if (fdcExperimentalFood?.FoodNutrients != null)
+            SetNutrients(fdcExperimentalFood.FoodNutrients);
+        }
+
+        private void SetNutrients(List<FdcModels.Foods.FoodNutrient>? foodNutrients)
+        {
+            if (foodNutrients != null)
             {
-                var calories = fdcExperimentalFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Calorie.Id)?.FirstOrDefault();
+                var calories = foodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Calorie.Id)?.FirstOrDefault();
 
                 if (calories?.Nutrient != null)
                 {
@@ -281,7 +171,7 @@ namespace ElementaCibi.Data.Models
                     };
                 }
 
-                var fiber = fdcExperimentalFood.FoodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Fiber.Id)?.FirstOrDefault();
+                var fiber = foodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Fiber.Id)?.FirstOrDefault();
 
                 if (fiber?.Nutrient != null)
                 {
@@ -289,6 +179,35 @@ namespace ElementaCibi.Data.Models
                     {
                         Amount = fiber.Amount,
                         Unit = fiber.Nutrient.UnitName,
+                    };
+                }
+            }
+        }
+
+        //This is just for the food search list, probably get this down to only include food label nutrients to prevent a noisy food search interface
+        private void SetSearchFoodNutrients(List<FdcModels.Search.FoodNutrient>? foodNutrients)
+        {
+            if (foodNutrients != null)
+            {
+                var calories = foodNutrients.Where(n => n.NutrientId == NutrientCode.Calorie.Id)?.FirstOrDefault();
+
+                if (calories?.Value != null)
+                {
+                    Calories = new Nutrient
+                    {
+                        Amount = calories.Value,
+                        Unit = calories.UnitName,
+                    };
+                }
+
+                var fiber = foodNutrients.Where(n => n.NutrientId == NutrientCode.Fiber.Id)?.FirstOrDefault();
+
+                if (fiber?.Value != null)
+                {
+                    Fiber = new Nutrient
+                    {
+                        Amount = fiber.Value,
+                        Unit = fiber.UnitName,
                     };
                 }
             }
