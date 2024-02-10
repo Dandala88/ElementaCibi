@@ -14,6 +14,7 @@ namespace ElementaCibi.Data.Models
         public List<Portion> Portions { get; set; } = new List<Portion>();
         public Nutrient? Calories { get; set; }
         public Nutrient? Fiber { get; set; }
+        public Nutrient? Carbohydrates { get; set; }
         public float Ratio 
         { 
             get
@@ -171,6 +172,17 @@ namespace ElementaCibi.Data.Models
                     };
                 }
 
+                var carbohydrates = foodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.CarbohydrateByDiff.Id)?.FirstOrDefault();
+
+                if (carbohydrates?.Nutrient != null)
+                {
+                    Carbohydrates = new Nutrient
+                    {
+                        Amount = carbohydrates.Amount,
+                        Unit = carbohydrates.Nutrient.UnitName,
+                    };
+                }
+
                 var fiber = foodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.Fiber.Id)?.FirstOrDefault();
 
                 if (fiber?.Nutrient != null)
@@ -197,6 +209,17 @@ namespace ElementaCibi.Data.Models
                     {
                         Amount = calories.Value,
                         Unit = calories.UnitName,
+                    };
+                }
+
+                var carbohydrates = foodNutrients.Where(n => n.Nutrient?.Id == NutrientCode.CarbohydrateByDiff.Id)?.FirstOrDefault();
+
+                if (carbohydrates?.Nutrient != null)
+                {
+                    Carbohydrates = new Nutrient
+                    {
+                        Amount = carbohydrates.Amount,
+                        Unit = carbohydrates.Nutrient.UnitName,
                     };
                 }
 

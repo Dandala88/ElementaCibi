@@ -9,6 +9,12 @@
             public const int Number = 208;
         }
 
+        public static class CarbohydrateByDiff
+        {
+            public const int Id = 1005;
+            public const int Number = 205;
+        }
+
         public static class Fiber
         {
             public const int Id = 1079;
